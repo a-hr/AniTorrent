@@ -63,4 +63,4 @@ This package depends on:
 
 ## Usage
 
-Just launch the app and enjoy!
+Just launch the app (`main.py`) and enjoy!
