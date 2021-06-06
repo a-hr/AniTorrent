@@ -1,0 +1,5 @@
+requests>=2.25
+beautifulsoup4>=4.9
+cloudscraper>=1.2
+PyQt5>=5.15
+qbittorrent-api>=2021.2.17

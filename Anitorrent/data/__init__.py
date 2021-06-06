@@ -1,0 +1,1 @@
+from .app_vars import Config

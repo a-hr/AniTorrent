@@ -1,0 +1,36 @@
+# Byte-compiled / optimized / DLL files
+**/__pycache__/
+*.py[cod]
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Tests
+tests/
+
+# Environment
+anienv/
+
+# Ui files
+Anitorrent/ui/*.ui
+Anitorrent/ui/*.qrc
