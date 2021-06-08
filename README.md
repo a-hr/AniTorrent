@@ -37,10 +37,8 @@ Browse and download anime at max speed effortlessly, without any ads and at the 
 
 ## Supported Sites
 
-SubsPlease currently covers roughly all of the airing animes, while Erai Raws has older animes available.
-
-- [Erai Raws](https://www.erai-raws.info/): subtitles in many languages (Eng, Sp, Ger, Ita, Pt...)
-- [SubsPlease](https://subsplease.org/)
+- [Erai Raws](https://www.erai-raws.info/): subtitles in many languages (Eng, Sp, Ger, Ita, Pt...), includes older series than SubsPlease.
+- [SubsPlease](https://subsplease.org/): currently covers roughly all of the airing animes.
 - *On next updates*: `Judas`, `HorribleSubs` 
 - More to come (feel free to ask through pull requests)
 
