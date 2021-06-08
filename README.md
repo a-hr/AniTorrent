@@ -9,7 +9,8 @@ Browse and download anime at max speed effortlessly, without any ads and at the 
 ## Features
 
 - Anime all-in-one downloader based on [qBittorrent API](https://github.com/rmartin16/qbittorrent-api).
-- The downloading speed has no cap apart from your own internet, and no ads are displayed.
+- The downloading speed has no cap apart from your own internet.
+- Ad-free.
 - Full-featured: search by show title, quality, batch and fansub group, and download multiple episodes at the same time.
 - Real time progress and ETA tracking on the app.
 - Keep your shows automatically ordered on folders.
@@ -17,6 +18,17 @@ Browse and download anime at max speed effortlessly, without any ads and at the 
 - Upload schedule for all of the fansubs, covering most of the airing shows.
 - More to come: fav list, themes, MAL account linking...
 
+## Changelog
+
+- Updated Schedule: clicking on a show will retrieve its episodes for the selected fansub.
+- General bugfixes:
+  - The app will check for a running WebUI server and launch it on background if needed.
+  - Existence of download path is checked on startup to prevent errors during downloading.
+- Future updates:
+  - Support for episode streaming without downloading (`VLC`).
+  - 2 new fansubs: HorribleSubs (huge amount of old series) and Judas.
+ 
+ 
 ## Supported Systems
 
 - Windows
@@ -29,7 +41,7 @@ SubsPlease currently covers roughly all of the airing animes, while Erai Raws ha
 
 - [Erai Raws](https://www.erai-raws.info/): subtitles in many languages (Eng, Sp, Ger, Ita, Pt...)
 - [SubsPlease](https://subsplease.org/)
-- Nyaa.si
+- *On next updates*: `Judas`, `HorribleSubs` 
 - More to come (feel free to ask through pull requests)
 
 ## Installation
@@ -43,8 +55,6 @@ pip install -r req.txt
 * **Windows users might simply execute the setup.bat file**
 
 3. Download and install the [qBittorrent desktop app](https://www.qbittorrent.org/download.php), and enable WebUI on your settings (custom user, pass and port might be set on AniTorrent settings aswell). Letting qBittorrent launch on startup is recommended.
-
-* **The WebUI server must be running on your WiFi network when using AniTorrent.**
 
 **Note**:  
 
