@@ -119,3 +119,52 @@ class EpisodeTableModel(QAbstractTableModel):
         self.checked = [False for _ in range(len(self.episodes))]
         self.layoutChanged.emit()
 
+
+class ScheduleTableModel(QAbstractTableModel):
+    
+    def __init__(self, data) -> None:   
+        super(ScheduleTableModel, self).__init__()
+        
+        self.HEADERS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+        self.data = data
+
+    def flags(self, index):
+        return Qt.ItemIsSelectable | Qt.ItemIsEnabled
+
+    def rowCount(self, *args, **kwargs):
+        return max([len(col) for col in self.data])
+
+    def columnCount(self, *args, **kwargs):
+        return len(self.HEADERS)
+
+    def headerData(self, section, orientation, role=Qt.DisplayRole):
+        if orientation == Qt.Horizontal and role == Qt.DisplayRole:
+            return self.HEADERS[section]
+
+    def data(self, index, role):
+
+        show = index.row()
+        day = index.column()
+
+        if role == Qt.DisplayRole:
+            
+            try:
+                content = self.data[day][show][0]
+            except:
+                content = ''
+            finally:
+                return content
+
+        elif role == Qt.TextAlignmentRole:
+            return Qt.AlignCenter
+        
+        elif role == Qt.ToolTipRole:
+            try:
+                content = self.data[day][show][0]
+            except:
+                content = ''
+            finally:
+                return content if content else None
+
+    def return_selected(self, index):
+        return self.data[index.column()][index.row()][0]

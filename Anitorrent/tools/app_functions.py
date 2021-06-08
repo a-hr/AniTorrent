@@ -29,9 +29,10 @@ class Functions(QtCore.QObject):
         else:
             return [f"No results for '{search_term}'.",]
 
-    def episodes(self, QModelIndex) -> list[Episode]:
+    def episodes(self, QModelIndex = None, selected_series:str = None) -> list[Episode]:
         
-        selected_series = self.parent.listWidget_search.itemFromIndex(QModelIndex).text()
+        if QModelIndex:
+            selected_series = self.parent.listWidget_search.itemFromIndex(QModelIndex).text()
     
         SearchEngine = Engine(self.parent.current_fansub)
 
@@ -46,19 +47,21 @@ class Functions(QtCore.QObject):
             return cleaned_results
 
     def download(self, torrents:list[Torrent]) -> list[Torrent]:
-
-        try:
-            qbt_client = qbittorrentapi.Client(
-                host=f"localhost:{self.parent.config.port_WebUI}",
-                username=self.parent.config.user_WebUI,
-                password=self.parent.config.pass_WebUI,
-                SIMPLE_RESPONSES=True
-            )
         
-        except Exception as e:
-            # abrir qbt con subprocess
-            print(e)
-
+        qbt_client = qbittorrentapi.Client(
+            host=f"localhost:{self.parent.config.port_WebUI}",
+            username=self.parent.config.user_WebUI,
+            password=self.parent.config.pass_WebUI,
+            SIMPLE_RESPONSES=True
+        )
+        
+        # Check if WebUI is up
+        try:
+            qbt_client.app_version()
+        except:
+            import os
+            os.system(f'cmd /c "start /min "" "{self.parent.config.qbittorrent_path}""')
+            
         for torrent in torrents:
             
             qbt_client.torrents_add(

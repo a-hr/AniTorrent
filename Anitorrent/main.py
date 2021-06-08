@@ -3,11 +3,12 @@ import datetime
 import sys
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from pathlib import Path
 
 from ui import Ui_MainWindow, Ui_AiringToday, Ui_Schedule
 from data import Config
 from tools import Functions, Engine
-from models import FilterProxyModel, EpisodeTableModel
+from models import FilterProxyModel, EpisodeTableModel, ScheduleTableModel
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -24,6 +25,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.uiDefinitions()
 
         self.show()
+        
+        if not Path(f'{self.config.download_path}').exists():
+            self.stackedWidget.setCurrentIndex(3)
+            warning = "The provided download path does not exist. Please select a new one."
+            self.info_box('Warning', warning)
 
     def setup(self):
 
@@ -59,9 +65,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.tableWidget_downloads.verticalHeader().setVisible(False)
 
         self.tableWidget_downloads.setColumnCount(3)
-        self.tableWidget_downloads.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
-        self.tableWidget_downloads.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignCenter)
-        self.tableWidget_downloads.setHorizontalHeaderLabels(("Name", "Progress", "Remaining"))
+        self.tableWidget_downloads.setEditTriggers(
+            QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.tableWidget_downloads.horizontalHeader().setDefaultAlignment(
+            QtCore.Qt.AlignCenter)
+        self.tableWidget_downloads.setHorizontalHeaderLabels((
+            "Name", "Progress", "Remaining"))
 
         header = self.tableWidget_downloads.horizontalHeader()       
         header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
@@ -76,16 +85,22 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.line_search.returnPressed.connect(self.search)
         self.button_search.clicked.connect(self.search)
 
-        self.listWidget_search.clicked.connect(lambda parent: self.load_childs(parent))
+        self.listWidget_search.clicked.connect(
+            lambda parent: self.load_childs(parent))
 
-        self.pushButton_filter.clicked.connect(lambda: self.filter_results(reset=False))
-        self.pushButton_resetfilter.clicked.connect(lambda: self.filter_results(reset=True))
+        self.pushButton_filter.clicked.connect(
+            lambda: self.filter_results(reset=False))
+        self.pushButton_resetfilter.clicked.connect(
+            lambda: self.filter_results(reset=True))
 
         self.pushButton_download.clicked.connect(self.download)
 
-        self.pushButton_change_settings.clicked.connect(self.save_settings_reload)
-        self.pushButton_download_path.clicked.connect(lambda: self.select_file_dir(select='download_dir'))
-        self.pushButton_qB_path.clicked.connect(lambda: self.select_file_dir(select='qbt_path'))
+        self.pushButton_change_settings.clicked.connect(
+            self.save_settings_reload)
+        self.pushButton_download_path.clicked.connect(
+            lambda: self.select_file_dir(select='download_dir'))
+        self.pushButton_qB_path.clicked.connect(
+            lambda: self.select_file_dir(select='qbt_path'))
         # </Connections>
 
     # <UI Management>
@@ -94,12 +109,25 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.btn_toggle_menu.clicked.connect(lambda: self.toggleMenu(220, True))
 
         self.stackedWidget.setMinimumWidth(20)
-        self.addNewMenu("Search", "btn_search", "url(:/16x16/icons/16x16/cil-magnifying-glass.png)", True)
-        self.addNewMenu("Results", "btn_results", "url(:/16x16/icons/16x16/cil-browser.png)", True)
-        self.addNewMenu("Downloads", "btn_downloads", "url(:/16x16/icons/16x16/cil-data-transfer-down.png)", True)
-
-        self.addNewMenu("Settings", "btn_settings", "url(:/16x16/icons/16x16/cil-settings.png)", False)
-        self.addNewMenu("About", "btn_about", "url(:/16x16/icons/16x16/cil-people.png)", False)
+        self.addNewMenu(
+            "Search",
+            "btn_search",
+            "url(:/16x16/icons/16x16/cil-magnifying-glass.png)", True)
+        self.addNewMenu(
+            "Results","btn_results",
+            "url(:/16x16/icons/16x16/cil-browser.png)", True)
+        self.addNewMenu(
+            "Downloads",
+            "btn_downloads",
+            "url(:/16x16/icons/16x16/cil-data-transfer-down.png)", True)
+        self.addNewMenu(
+            "Settings",
+            "btn_settings",
+            "url(:/16x16/icons/16x16/cil-settings.png)", False)
+        self.addNewMenu(
+            "About",
+            "btn_about",
+            "url(:/16x16/icons/16x16/cil-people.png)", False)
 
         self.selectStandardMenu("btn_search")
         self.stackedWidget.setCurrentWidget(self.page_home)
@@ -175,7 +203,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         font.setFamily(u"Segoe UI")
         button = QtWidgets.QPushButton('1', self)
         button.setObjectName(objName)
-        sizePolicy3 = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy3 = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
         sizePolicy3.setHorizontalStretch(0)
         sizePolicy3.setVerticalStretch(0)
         sizePolicy3.setHeightForWidth(button.sizePolicy().hasHeightForWidth())
@@ -204,7 +233,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             else:
                 widthExtended = standard
 
-            self.animation = QtCore.QPropertyAnimation(self.frame_left_menu, b"minimumWidth")
+            self.animation = QtCore.QPropertyAnimation(
+                self.frame_left_menu, b"minimumWidth")
             self.animation.setDuration(300)
             self.animation.setStartValue(width)
             self.animation.setEndValue(widthExtended)
@@ -278,8 +308,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         reply = QtWidgets.QMessageBox.question(
                 self,
                 'Change settings',
-                'Settings will be saved and app reloaded.\nAre you sure you want to proceed?',
-                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
+                """Settings will be saved and app reloaded.
+                \nAre you sure you want to proceed?""",
+                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                QtWidgets.QMessageBox.No)
                 
         if reply == QtWidgets.QMessageBox.Yes:
 
@@ -306,12 +338,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     @staticmethod
     def selectMenu(getStyle):
-        select = getStyle + ("QPushButton { border-right: 7px solid rgb(44, 49, 60); }")
+        select = getStyle + (
+            "QPushButton { border-right: 7px solid rgb(44, 49, 60); }")
         return select
 
     @staticmethod
     def deselectMenu(getStyle):
-        deselect = getStyle.replace("QPushButton { border-right: 7px solid rgb(44, 49, 60); }", "")
+        deselect = getStyle.replace(
+            "QPushButton { border-right: 7px solid rgb(44, 49, 60); }", "")
         return deselect
 
     # <Main Methods>
@@ -328,7 +362,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     @QtCore.pyqtSlot(QtCore.QModelIndex)
     def load_childs(self, parent) -> None:
         
-        result = self.functions.episodes(parent)
+        result = self.functions.episodes(QModelIndex=parent)
 
         self.episodes_model = EpisodeTableModel(result, self.config)
         self.episodes_proxymodel = FilterProxyModel()
@@ -342,6 +376,23 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.stackedWidget.setCurrentIndex(1)
         self.swapMenus("btn_results")
 
+    def load_child_from_table(self, parent_fansub:tuple) -> None:
+        
+        self.current_fansub = parent_fansub[1]
+        result = self.functions.episodes(selected_series=parent_fansub[0])
+        
+        self.episodes_model = EpisodeTableModel(result, self.config)
+        self.episodes_proxymodel = FilterProxyModel()
+        self.episodes_proxymodel.setSourceModel(self.episodes_model)
+        self.tableView_episodes.setModel(self.episodes_proxymodel)
+
+        header = self.tableView_episodes.horizontalHeader()       
+        header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
+
+        self.stackedWidget.setCurrentIndex(1)
+        self.swapMenus("btn_results")
+    
     @QtCore.pyqtSlot(bool)
     def download(self, *args) -> None:
 
@@ -396,6 +447,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def schedule(self):
         self.scheduleWindow = ScheduleWindow()
         self.scheduleWindow.show()
+        self.scheduleWindow.search_title.connect(self.load_child_from_table)
     
     @QtCore.pyqtSlot()
     def save_settings_reload(self):
@@ -473,8 +525,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             reply = QtWidgets.QMessageBox.question(
                 self,
                 'Quit',
-                'A file is still being processed (<30s left)\nAre you sure you want to quit?',
-                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
+                """A file is still being processed (<30s left)
+                \nAre you sure you want to quit?""",
+                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                QtWidgets.QMessageBox.No)
                 
             if reply == QtWidgets.QMessageBox.Yes:
                 event.accept()
@@ -483,43 +537,63 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
 class ScheduleWindow(QtWidgets.QWidget, Ui_Schedule):
-
+    
+    search_title = QtCore.pyqtSignal(tuple)
+    
     def __init__(self):
         QtWidgets.QWidget.__init__(self)
         self.setupUi(self)
-        self.setFixedSize(self.size())
+
+        self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+        
+        # <Load GUI properties>
+        self.comboBox.addItems(["Subs Please", "Erai Raws"])
+        self.clicked = False
+
+        self.frame.setFrameShape(QtWidgets.QFrame.Box)
+
+        # <Connections>
+        self.comboBox.currentTextChanged.connect(self.populate_table)
+        self.btn_minimize.clicked.connect(lambda: self.showMinimized())
+        self.btn_close.clicked.connect(lambda: self.close())
+        self.tableViewSchedule.clicked.connect(self.search_clicked)
 
         self.populate_table()
-            
-        self.comboBox.currentTextChanged.connect(self.populate_table)    
 
     def populate_table(self):
-        pass
-        # schedule_class = NyaaSi()
-        # translate = {'SubsPlease': 'subs_please', 'Erai Raws': 'erai_raws'}
-        # code = translate[self.comboBox.currentText()]
+        schedule_class = Engine(self.comboBox.currentText())
+        data = schedule_class.update_schedule()
+        self.model = ScheduleTableModel(data)
+        self.tableViewSchedule.setModel(self.model)
 
-        # schedule_class.set_source(code)
-        # data = schedule_class.show_schedule()
+        self.tableViewSchedule.verticalHeader().setVisible(False)
+        space = self.tableViewSchedule.minimumWidth() - 30
+        [self.tableViewSchedule.setColumnWidth(col, int(space / 7)) for col in range(7)]
 
-        # weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    @QtCore.pyqtSlot(QtCore.QModelIndex)
+    def search_clicked(self, index):
+        self.search_title.emit((
+            self.model.return_selected(index),
+            self.comboBox.currentText()))
+        self.close()
+        
+    # <App Events>
+    def mousePressEvent(self, event):
+        self.old_pos_x = int(event.screenPos().x())
+        self.old_pos_y = int(event.screenPos().y())
 
-        # rowcount = max([len(data[day]) for day in data])
+    def mouseMoveEvent(self, event):
+        if self.clicked:
+            dx = self.old_pos_x - int(event.screenPos().x())
+            dy = self.old_pos_y - int(event.screenPos().y())
+            self.move(self.pos().x() - dx, self.pos().y() - dy)
 
-        # self.tableWidgetSchedule.clearContents()
-        # self.tableWidgetSchedule.setRowCount(rowcount)
-        # self.tableWidgetSchedule.setColumnCount(7)
+        self.old_pos_x = int(event.screenPos().x())
+        self.old_pos_y = int(event.screenPos().y())
+        self.clicked = True
 
-        # items = lambda name: QtWidgets.QTableWidgetItem(name)
-
-        # for col, weekday in enumerate(weekdays):
-            
-        #     [self.tableWidgetSchedule.setItem(row, col, items(show)) for row, show in enumerate(data[weekday])]
-
-        # self.tableWidgetSchedule.setHorizontalHeaderLabels(weekdays)
-        # self.tableWidgetSchedule.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
-        # self.tableWidgetSchedule.verticalHeader().setVisible(False)
-        # self.tableWidgetSchedule.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter|QtCore.Qt.AlignCenter)
+        return QtWidgets.QWidget.mouseMoveEvent(self, event)
 
 
 class AiringToday(QtWidgets.QWidget, Ui_AiringToday):
@@ -554,7 +628,8 @@ class AiringToday(QtWidgets.QWidget, Ui_AiringToday):
         self.model.setColumnCount(2)
         self.model.setHorizontalHeaderLabels(['Time', 'Show'])
         self.tableViewSchedule.verticalHeader().setVisible(False)
-        self.tableViewSchedule.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        self.tableViewSchedule.horizontalHeader().setSectionResizeMode(
+            0, QtWidgets.QHeaderView.Stretch)
 
     def populate_table(self):
         self.setupTable()

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\Users\herre\OneDrive - alumni.unav.es\Code\Python\AniTorrent+\AniTorrent+\ui\today_schedule.ui'
+# Form implementation generated from reading ui file 'c:\Users\herre\OneDrive - alumni.unav.es\Code\Python\AniTorrent\Anitorrent\ui\today_schedule.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.2
 #
@@ -27,16 +27,18 @@ class Ui_AiringToday(object):
 "background-color: #444a57;\n"
 "color: white;\n"
 "}")
-        self.verticalLayout = QtWidgets.QVBoxLayout(AiringToday)
+        self.verticalLayout_3 = QtWidgets.QVBoxLayout(AiringToday)
+        self.verticalLayout_3.setContentsMargins(0, 0, 0, -1)
+        self.verticalLayout_3.setObjectName("verticalLayout_3")
+        self.frame = QtWidgets.QFrame(AiringToday)
+        self.frame.setStyleSheet("background-color: #444a57;")
+        self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame.setObjectName("frame")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.frame)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.bg = QtWidgets.QFrame(AiringToday)
-        self.bg.setStyleSheet("")
-        self.bg.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.bg.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.bg.setObjectName("bg")
-        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.bg)
-        self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.frame_top_btns = QtWidgets.QFrame(self.bg)
+        self.frame_top_btns = QtWidgets.QFrame(self.frame)
         self.frame_top_btns.setMaximumSize(QtCore.QSize(16777215, 42))
         self.frame_top_btns.setStyleSheet("background-color: rgba(27, 29, 35, 200)")
         self.frame_top_btns.setFrameShape(QtWidgets.QFrame.NoFrame)
@@ -135,7 +137,14 @@ class Ui_AiringToday(object):
         self.btn_close.setObjectName("btn_close")
         self.horizontalLayout_5.addWidget(self.btn_close)
         self.horizontalLayout_4.addWidget(self.frame_btns_right, 0, QtCore.Qt.AlignRight)
-        self.verticalLayout_2.addWidget(self.frame_top_btns)
+        self.verticalLayout.addWidget(self.frame_top_btns)
+        self.bg = QtWidgets.QFrame(self.frame)
+        self.bg.setStyleSheet("")
+        self.bg.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.bg.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.bg.setObjectName("bg")
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.bg)
+        self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.comboBox = QtWidgets.QComboBox(self.bg)
         self.comboBox.setMaximumSize(QtCore.QSize(150, 16777215))
         font = QtGui.QFont()
@@ -292,6 +301,7 @@ class Ui_AiringToday(object):
         self.tableViewSchedule.setObjectName("tableViewSchedule")
         self.verticalLayout_2.addWidget(self.tableViewSchedule)
         self.verticalLayout.addWidget(self.bg)
+        self.verticalLayout_3.addWidget(self.frame)
 
         self.retranslateUi(AiringToday)
         QtCore.QMetaObject.connectSlotsByName(AiringToday)
@@ -299,8 +309,7 @@ class Ui_AiringToday(object):
     def retranslateUi(self, AiringToday):
         _translate = QtCore.QCoreApplication.translate
         AiringToday.setWindowTitle(_translate("AiringToday", "Airing Today"))
-        self.label_title_bar_top.setText(_translate("AiringToday", "Airing Today"))
+        self.label_title_bar_top.setText(_translate("AiringToday", "   Airing Today"))
         self.btn_minimize.setToolTip(_translate("AiringToday", "Minimize"))
         self.btn_close.setToolTip(_translate("AiringToday", "Close"))
-
 from . import files_rc

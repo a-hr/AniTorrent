@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\Users\herre\OneDrive - alumni.unav.es\Code\Python\AniTorrent+\AniTorrent+\ui\schedule.ui'
+# Form implementation generated from reading ui file 'c:\Users\herre\OneDrive - alumni.unav.es\Code\Python\AniTorrent\Anitorrent\ui\schedule.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.2
 #
@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(914, 435)
+        Form.resize(961, 437)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -99,9 +99,19 @@ class Ui_Form(object):
 " QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {\n"
 "     background: none;\n"
 " }")
-        self.verticalLayout = QtWidgets.QVBoxLayout(Form)
+        self.verticalLayout_3 = QtWidgets.QVBoxLayout(Form)
+        self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_3.setObjectName("verticalLayout_3")
+        self.frame_2 = QtWidgets.QFrame(Form)
+        self.frame_2.setStyleSheet("background-color: #444a57;")
+        self.frame_2.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame_2.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame_2.setObjectName("frame_2")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.frame_2)
+        self.verticalLayout.setContentsMargins(0, 0, 0, -1)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.frame_top_btns = QtWidgets.QFrame(Form)
+        self.frame_top_btns = QtWidgets.QFrame(self.frame_2)
+        self.frame_top_btns.setMinimumSize(QtCore.QSize(0, 42))
         self.frame_top_btns.setMaximumSize(QtCore.QSize(16777215, 42))
         self.frame_top_btns.setStyleSheet("background-color: rgba(27, 29, 35, 200)")
         self.frame_top_btns.setFrameShape(QtWidgets.QFrame.NoFrame)
@@ -201,7 +211,14 @@ class Ui_Form(object):
         self.horizontalLayout_5.addWidget(self.btn_close)
         self.horizontalLayout_4.addWidget(self.frame_btns_right, 0, QtCore.Qt.AlignRight)
         self.verticalLayout.addWidget(self.frame_top_btns)
-        self.comboBox = QtWidgets.QComboBox(Form)
+        self.frame = QtWidgets.QFrame(self.frame_2)
+        self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame.setObjectName("frame")
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.frame)
+        self.verticalLayout_2.setContentsMargins(18, 9, -1, -1)
+        self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.comboBox = QtWidgets.QComboBox(self.frame)
         self.comboBox.setMaximumSize(QtCore.QSize(150, 16777215))
         font = QtGui.QFont()
         font.setFamily("Segoe UI")
@@ -237,23 +254,25 @@ class Ui_Form(object):
 "    selection-background-color: rgb(39, 44, 54);\n"
 "}")
         self.comboBox.setObjectName("comboBox")
-        self.verticalLayout.addWidget(self.comboBox)
-        self.tableWidgetSchedule = QtWidgets.QTableWidget(Form)
-        self.tableWidgetSchedule.setFocusPolicy(QtCore.Qt.TabFocus)
-        self.tableWidgetSchedule.setStyleSheet("QTableWidget {    \n"
+        self.verticalLayout_2.addWidget(self.comboBox)
+        self.tableViewSchedule = QtWidgets.QTableView(self.frame)
+        self.tableViewSchedule.setMinimumSize(QtCore.QSize(930, 0))
+        self.tableViewSchedule.setMaximumSize(QtCore.QSize(930, 16777215))
+        self.tableViewSchedule.setFocusPolicy(QtCore.Qt.TabFocus)
+        self.tableViewSchedule.setStyleSheet("QTableView {    \n"
 "    background-color: rgb(39, 44, 54);\n"
 "    padding: 10px;\n"
 "    border-radius: 5px;\n"
 "    gridline-color: rgb(44, 49, 60);\n"
 "    border-bottom: 1px solid rgb(44, 49, 60);\n"
 "}\n"
-"QTableWidget::item{\n"
+"QTableView::item{\n"
 "    border-color: rgb(44, 49, 60);\n"
 "    padding-left: 5px;\n"
 "    padding-right: 5px;\n"
 "    gridline-color: rgb(44, 49, 60);\n"
 "}\n"
-"QTableWidget::item:selected{\n"
+"QTableView::item:selected{\n"
 "    background-color: rgb(85, 170, 255);\n"
 "}\n"
 "\n"
@@ -265,7 +284,7 @@ class Ui_Form(object):
 "    border-bottom: 1px solid rgb(44, 49, 60);\n"
 "    border-right: 1px solid rgb(44, 49, 60);\n"
 "}\n"
-"QTableWidget::horizontalHeader {    \n"
+"QTableView::horizontalHeader {    \n"
 "    background-color: rgb(81, 255, 0);\n"
 "}\n"
 "QHeaderView::section:horizontal\n"
@@ -355,17 +374,16 @@ class Ui_Form(object):
 " QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {\n"
 "     background: none;\n"
 " }")
-        self.tableWidgetSchedule.setFrameShape(QtWidgets.QFrame.NoFrame)
-        self.tableWidgetSchedule.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
-        self.tableWidgetSchedule.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.tableWidgetSchedule.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
-        self.tableWidgetSchedule.setEditTriggers(QtWidgets.QAbstractItemView.DoubleClicked)
-        self.tableWidgetSchedule.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
-        self.tableWidgetSchedule.setColumnCount(7)
-        self.tableWidgetSchedule.setObjectName("tableWidgetSchedule")
-        self.tableWidgetSchedule.setRowCount(0)
-        self.tableWidgetSchedule.verticalHeader().setVisible(False)
-        self.verticalLayout.addWidget(self.tableWidgetSchedule)
+        self.tableViewSchedule.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.tableViewSchedule.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+        self.tableViewSchedule.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.tableViewSchedule.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
+        self.tableViewSchedule.setEditTriggers(QtWidgets.QAbstractItemView.DoubleClicked)
+        self.tableViewSchedule.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+        self.tableViewSchedule.setObjectName("tableViewSchedule")
+        self.verticalLayout_2.addWidget(self.tableViewSchedule)
+        self.verticalLayout.addWidget(self.frame)
+        self.verticalLayout_3.addWidget(self.frame_2)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -373,9 +391,8 @@ class Ui_Form(object):
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Schedule"))
-        self.label_title_bar_top.setText(_translate("Form", "Season Weekly Schedule"))
+        self.label_title_bar_top.setText(_translate("Form", "     Season Weekly Schedule"))
         self.btn_minimize.setToolTip(_translate("Form", "Minimize"))
         self.btn_close.setToolTip(_translate("Form", "Close"))
 
 from . import files_rc
-

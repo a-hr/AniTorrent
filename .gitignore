@@ -7,6 +7,7 @@
 build/
 develop-eggs/
 dist/
+_dist/
 downloads/
 eggs/
 .eggs/
