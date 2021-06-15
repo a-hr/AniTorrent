@@ -36,9 +36,10 @@ class PluginEngine:
         return res
 
     def search_episodes(self, fansub, title):
+        fansub_code = getattr(self.FANSUBS[fansub], 'nyaa_code')
         parser, episodes, magnets = self.select_parser(fansub), [], []
         title = title.strip().replace(':',' ').replace(' ','+').removesuffix('.')
-        cap, first_response = self.__page_cap(fansub, title)
+        cap, first_response = self.__page_cap(fansub_code, title)
         episodes, magnets = self.__soup_parser(
             first_response, episodes, magnets)
 
