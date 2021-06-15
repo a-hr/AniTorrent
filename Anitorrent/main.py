@@ -1,14 +1,15 @@
 import ctypes
 import datetime
+import psutil
 import sys
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from pathlib import Path
 
-from ui import Ui_MainWindow, Ui_AiringToday, Ui_Schedule
+from ui import Ui_MainWindow, Ui_AiringToday, Ui_Schedule, CheckableComboBox
 from data import Config
-from tools import Functions, Engine
-from models import FilterProxyModel, EpisodeTableModel, ScheduleTableModel
+from tools import Functions, PluginEngine
+from models import FilterProxyModel, EpisodeTableModel, ScheduleTableModel, SearchTableModel
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -36,6 +37,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # <Setup>
         self.clicked = False
         self.current_fansub = str()
+        self.selected_fansubs = list()
 
         self.config = Config()
         self.setWindowIcon(QtGui.QIcon(self.config.icon))
@@ -45,6 +47,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.threadpool = QtCore.QThreadPool()
 
         self.functions.start_observing()
+
+        if not "qbittorrent.exe" in (p.name() for p in psutil.process_iter()):
+            import os
+            os.system(f'cmd /c "start /min "" "{self.config.qbittorrent_path}""')
         # </Setup>
 
         # <GUI Properties>
@@ -61,6 +67,16 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # </GUI Properties>
 
         # <Widget Properties>
+        self.combobox_fansubs = CheckableComboBox()
+        for index, fansub in enumerate(self.config.plugins):
+            self.combobox_fansubs.addItem(fansub[0])
+            self.combobox_fansubs.setItemChecked(index, checked=fansub[1])
+
+        self.verticalLayout_10.replaceWidget(
+            self.combobox_source, self.combobox_fansubs)
+        self.combobox_source.close()
+
+        self.tableView_search.verticalHeader().setVisible(False)
         self.tableView_episodes.verticalHeader().setVisible(False)
         self.tableWidget_downloads.verticalHeader().setVisible(False)
 
@@ -85,7 +101,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.line_search.returnPressed.connect(self.search)
         self.button_search.clicked.connect(self.search)
 
-        self.listWidget_search.clicked.connect(
+        self.tableView_search.clicked.connect(
             lambda parent: self.load_childs(parent))
 
         self.pushButton_filter.clicked.connect(
@@ -351,30 +367,36 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     # <Main Methods>
     @QtCore.pyqtSlot()
     def search(self) -> None:
-
-        self.listWidget_search.clear()
-        self.current_fansub = self.combobox_source.currentText()
+        self.selected_fansubs = self.combobox_fansubs.returnChecked()
 
         results = self.functions.search()
 
-        [self.listWidget_search.addItem(serie_dict) for serie_dict in results]
+        if isinstance(results, dict):
+            self.model_search = SearchTableModel(results)
+            self.tableView_search.setModel(self.model_search)
+            self.tableView_search.resizeColumnsToContents()
+            # adjust table resizement
+        else:
+            self.info_box('Empty query', results)
 
     @QtCore.pyqtSlot(QtCore.QModelIndex)
     def load_childs(self, parent) -> None:
         
         result = self.functions.episodes(QModelIndex=parent)
+        if isinstance(result, list):
+            self.episodes_model = EpisodeTableModel(result, self.config)
+            self.episodes_proxymodel = FilterProxyModel()
+            self.episodes_proxymodel.setSourceModel(self.episodes_model)
+            self.tableView_episodes.setModel(self.episodes_proxymodel)
 
-        self.episodes_model = EpisodeTableModel(result, self.config)
-        self.episodes_proxymodel = FilterProxyModel()
-        self.episodes_proxymodel.setSourceModel(self.episodes_model)
-        self.tableView_episodes.setModel(self.episodes_proxymodel)
+            header = self.tableView_episodes.horizontalHeader()       
+            header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+            header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
 
-        header = self.tableView_episodes.horizontalHeader()       
-        header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
-        header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
-
-        self.stackedWidget.setCurrentIndex(1)
-        self.swapMenus("btn_results")
+            self.stackedWidget.setCurrentIndex(1)
+            self.swapMenus("btn_results")
+        else:
+            self.info_box('Empty query', result)
 
     def load_child_from_table(self, parent_fansub:tuple) -> None:
         
@@ -546,9 +568,10 @@ class ScheduleWindow(QtWidgets.QWidget, Ui_Schedule):
 
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+        self.engine = PluginEngine()
         
         # <Load GUI properties>
-        self.comboBox.addItems(["Subs Please", "Erai Raws"])
+        self.comboBox.addItems(self.engine.SCHEDULE)
         self.clicked = False
 
         self.frame.setFrameShape(QtWidgets.QFrame.Box)
@@ -562,8 +585,7 @@ class ScheduleWindow(QtWidgets.QWidget, Ui_Schedule):
         self.populate_table()
 
     def populate_table(self):
-        schedule_class = Engine(self.comboBox.currentText())
-        data = schedule_class.update_schedule()
+        data = self.engine.update_schedule(self.comboBox.currentText())
         self.model = ScheduleTableModel(data)
         self.tableViewSchedule.setModel(self.model)
 
@@ -606,9 +628,10 @@ class AiringToday(QtWidgets.QWidget, Ui_AiringToday):
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
         self.today = datetime.datetime.today().weekday()
+        self.engine = PluginEngine()
 
         # <Load GUI properties>
-        self.comboBox.addItems(["Subs Please", "Erai Raws"])
+        self.comboBox.addItems(self.engine.SCHEDULE)
         self.clicked = False
 
         self.bg.setFrameShape(QtWidgets.QFrame.Box)
@@ -633,8 +656,7 @@ class AiringToday(QtWidgets.QWidget, Ui_AiringToday):
 
     def populate_table(self):
         self.setupTable()
-        schedule_class = Engine(self.comboBox.currentText())
-        data = schedule_class.update_schedule()[self.today]
+        data = self.engine.update_schedule(self.comboBox.currentText())[self.today]
         item = lambda d: (QtGui.QStandardItem(d[0]), QtGui.QStandardItem(d[1]))
         [self.model.appendRow(item(show)) for show in data]
 

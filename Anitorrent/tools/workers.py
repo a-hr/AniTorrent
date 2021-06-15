@@ -23,16 +23,10 @@ class ProgressObserver(QtCore.QObject):
         self.running = False
         self.torrents = []
 
-        try:
-            self.qbt_client = qbittorrentapi.Client(
-                host=f"localhost:{self.config.port_WebUI}",
-                username=self.config.user_WebUI,
-                password=self.config.pass_WebUI
-            )
-        
-        except Exception as e:
-            # abrir qbt con subprocess
-            print(e)
+        self.qbt_client = qbittorrentapi.Client(
+            host=f"localhost:{self.config.port_WebUI}",
+            username=self.config.user_WebUI,
+            password=self.config.pass_WebUI)
 
     def update_progress(self):
 
@@ -41,14 +35,13 @@ class ProgressObserver(QtCore.QObject):
             response = self.qbt_client.torrents_info(
                 torrent_hash=torrent.torrent_hash,
                 SIMPLE_RESPONSES=True)
-
+            
             datas = [data for data in response 
             if data['hash'] == torrent.torrent_hash]
 
             if not datas:
                 self.torrent_canceled.emit(torrent)
                 self.torrents.remove(torrent)
-
 
             elif torrent.update_progress(datas[0]):
                 self.torrent_completed.emit(torrent)

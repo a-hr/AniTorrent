@@ -7,7 +7,8 @@ from random import randint
 class Episode:
     
     __slots__ = (
-        'title', 'suffix', 'series_name', 'quality', 'episode_str', 'episode_int', 'batch', 'magnet'
+        'title', 'suffix', 'series_name', 'quality', 'episode_str', 'episode_int', 'batch', 'magnet',
+        'info', 'multi'
         )
 
     def __init__(
@@ -20,6 +21,9 @@ class Episode:
             setattr(self, k, v)
 
         self.magnet = magnet_link
+
+    def __str__(self) -> str:
+        return f'title: {self.title}, quality: {self.quality}, info: {self.info}'
 
 
 class Torrent:
@@ -41,11 +45,11 @@ class Torrent:
         self.postprocess = self.__config.postprocess
         
         self.new_name = f'{episode_obj.title}{episode_obj.suffix}'
-        self.parent = episode_obj.series_name
+        self.parent = episode_obj.series_name.removesuffix('.')
         self.qb_download_path = ''
 
         self.title = episode_obj.title
-        self.is_folder = episode_obj.batch
+        self.is_folder = True if episode_obj.batch.lower() == 'true' else False
 
         if self.is_folder:
             self.download_folder = self.__config.download_path

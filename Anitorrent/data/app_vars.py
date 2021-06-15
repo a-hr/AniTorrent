@@ -6,7 +6,7 @@ class Config:
     __slots__ = (
         'root_folder', 'config_file', 'log_file', 'icon', 'qbittorrent_path', 'download_path',
         'postprocess', 'user_label', 'custom_WebUI', 'user_WebUI', 'pass_WebUI', 'port_WebUI',
-        '__settings'
+        'plugins', '__settings'
     )
 
     def __init__(self):
@@ -37,6 +37,18 @@ class Config:
         self.user_WebUI = self.__settings.value('user')
         self.pass_WebUI = self.__settings.value('pass')
         self.port_WebUI = self.__settings.value('port', type=int)
+
+        self.__settings.endGroup()
+
+        # Defaults
+        self.__settings.beginGroup('Defaults')
+
+        self.plugins = []
+
+        self.plugins.append(('SubsPlease', True))# self.__settings.value('SubsPlease', type=bool)))
+        self.plugins.append(('EraiRaws', self.__settings.value('EraiRaws', type=bool)))
+        self.plugins.append(('Judas', self.__settings.value('Judas', type=bool)))
+        self.plugins.append(('HorribleSubs', self.__settings.value('HorribleSubs', type=bool)))
 
         self.__settings.endGroup()
 

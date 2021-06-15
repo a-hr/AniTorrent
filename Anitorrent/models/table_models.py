@@ -53,7 +53,7 @@ class EpisodeTableModel(QAbstractTableModel):
         
         super(EpisodeTableModel, self).__init__()
         
-        self.HEADERS = ['Title', 'Quality', 'Full Season', 'Extra Info']
+        self.HEADERS = ['Title', 'Quality', 'Full Season', 'MultiSubs', 'Extra Info']
         self.episodes = episode_list
         self.checked = [False for _ in range(len(self.episodes))]
         self.__config = config
@@ -93,7 +93,10 @@ class EpisodeTableModel(QAbstractTableModel):
                 return episode.batch
 
             elif col == 3:
-                return episode.episode_str
+                return episode.multi
+            
+            elif col == 4:
+                return episode.info
 
         elif role == Qt.TextAlignmentRole and col != 0:
             return Qt.AlignCenter
@@ -168,3 +171,42 @@ class ScheduleTableModel(QAbstractTableModel):
 
     def return_selected(self, index):
         return self.data[index.column()][index.row()][0]
+
+
+class SearchTableModel(QAbstractTableModel):
+    
+    def __init__(self, data) -> None:   
+        super(SearchTableModel, self).__init__()        
+        self.HEADERS = ['Title', 'Fansub']
+
+        self.data = []
+        for fansub, titles in data.items():
+            for title in titles:
+                self.data.append((title, fansub))
+
+    def flags(self, index):
+        return Qt.ItemIsSelectable | Qt.ItemIsEnabled
+
+    def rowCount(self, *args, **kwargs):
+        return len(self.data)
+
+    def columnCount(self, *args, **kwargs):
+        return len(self.HEADERS)
+
+    def headerData(self, section, orientation, role=Qt.DisplayRole):
+        if orientation == Qt.Horizontal and role == Qt.DisplayRole:
+            return self.HEADERS[section]
+
+    def data(self, index, role):
+
+        row = index.row()
+        col = index.column()
+
+        if role == Qt.DisplayRole:
+            return self.data[row][col]
+
+        elif role == Qt.TextAlignmentRole:
+            return Qt.AlignCenter
+
+    def return_selected(self, index):
+        return self.data[index.row()]

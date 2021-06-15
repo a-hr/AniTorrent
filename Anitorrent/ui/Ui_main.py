@@ -705,23 +705,23 @@ class Ui_MainWindow(object):
         self.stackedWidget.setObjectName("stackedWidget")
         self.page_home = QtWidgets.QWidget()
         self.page_home.setObjectName("page_home")
-        self.listWidget_search = QtWidgets.QListWidget(self.page_home)
-        self.listWidget_search.setGeometry(QtCore.QRect(20, 190, 661, 391))
-        self.listWidget_search.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.listWidget_search.setStyleSheet("QListWidget {    \n"
+        self.tableView_search = QtWidgets.QTableView(self.page_home)
+        self.tableView_search.setGeometry(QtCore.QRect(20, 190, 661, 391))
+        self.tableView_search.setFocusPolicy(QtCore.Qt.NoFocus)
+        self.tableView_search.setStyleSheet("QTableView {    \n"
 "    background-color: rgb(39, 44, 54);\n"
 "    padding: 10px;\n"
 "    border-radius: 5px;\n"
 "    gridline-color: rgb(44, 49, 60);\n"
 "    border-bottom: 1px solid rgb(44, 49, 60);\n"
 "}\n"
-"QListWidget::item{\n"
+"QTableView::item{\n"
 "    border-color: rgb(44, 49, 60);\n"
 "    padding-left: 5px;\n"
 "    padding-right: 5px;\n"
 "    gridline-color: rgb(44, 49, 60);\n"
 "}\n"
-"QListWidget::item:selected{\n"
+"QTableView::item:selected{\n"
 "    background-color: rgb(85, 170, 255);\n"
 "}\n"
 "QScrollBar:horizontal {\n"
@@ -738,12 +738,49 @@ class Ui_MainWindow(object):
 "    margin: 21px 0 21px 0;\n"
 "    border-radius: 0px;\n"
 " }\n"
-"")
-        self.listWidget_search.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.listWidget_search.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
-        self.listWidget_search.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.listWidget_search.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
-        self.listWidget_search.setObjectName("listWidget_search")
+"QHeaderView::section{\n"
+"    Background-color: rgb(39, 44, 54);\n"
+"    max-width: 30px;\n"
+"    border: 1px solid rgb(44, 49, 60);\n"
+"    border-style: none;\n"
+"    border-bottom: 1px solid rgb(44, 49, 60);\n"
+"    border-right: 1px solid rgb(44, 49, 60);\n"
+"}\n"
+"QTableWidget::horizontalHeader {    \n"
+"    background-color: rgb(81, 255, 0);\n"
+"}\n"
+"QHeaderView::section:horizontal\n"
+"{\n"
+"    border: 1px solid rgb(32, 34, 42);\n"
+"    background-color: rgb(27, 29, 35);\n"
+"    padding: 3px;\n"
+"    border-top-left-radius: 7px;\n"
+"    border-top-right-radius: 7px;\n"
+"}\n"
+"QHeaderView::section:vertical\n"
+"{\n"
+"    border: 1px solid rgb(44, 49, 60);\n"
+"}\n"
+"QCheckBox::indicator {\n"
+"                border: 3px solid rgb(52, 59, 72);\n"
+"                width: 15px;\n"
+"                height: 15px;\n"
+"                border-radius: 10px;\n"
+"                background: rgb(44, 49, 60);\n"
+"            }\n"
+"            QCheckBox::indicator:hover {\n"
+"                border: 3px solid rgb(58, 66, 81);\n"
+"            }\n"
+"            QCheckBox::indicator:checked {\n"
+"                background: 3px solid rgb(52, 59, 72);\n"
+"                border: 3px solid rgb(52, 59, 72);    \n"
+"                background-image: url(:/16x16/icons/16x16/cil-check-alt.png);\n"
+"            }")
+        self.tableView_search.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.tableView_search.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+        self.tableView_search.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.tableView_search.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.tableView_search.setObjectName("tableView_search")
         self.label = QtWidgets.QLabel(self.page_home)
         self.label.setGeometry(QtCore.QRect(20, 30, 221, 61))
         font = QtGui.QFont()
@@ -925,7 +962,7 @@ class Ui_MainWindow(object):
         brush = QtGui.QBrush(QtGui.QColor(210, 210, 210))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.WindowText, brush)
-        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0, 0))
+        brush = QtGui.QBrush(QtGui.QColor(39, 44, 54))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.Button, brush)
         brush = QtGui.QBrush(QtGui.QColor(210, 210, 210))
@@ -934,10 +971,10 @@ class Ui_MainWindow(object):
         brush = QtGui.QBrush(QtGui.QColor(210, 210, 210))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.ButtonText, brush)
-        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
-        brush.setStyle(QtCore.Qt.NoBrush)
+        brush = QtGui.QBrush(QtGui.QColor(39, 44, 54))
+        brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.Base, brush)
-        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0, 0))
+        brush = QtGui.QBrush(QtGui.QColor(39, 44, 54))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.Window, brush)
         brush = QtGui.QBrush(QtGui.QColor(210, 210, 210, 128))
@@ -946,7 +983,7 @@ class Ui_MainWindow(object):
         brush = QtGui.QBrush(QtGui.QColor(210, 210, 210))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.WindowText, brush)
-        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0, 0))
+        brush = QtGui.QBrush(QtGui.QColor(39, 44, 54))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.Button, brush)
         brush = QtGui.QBrush(QtGui.QColor(210, 210, 210))
@@ -955,10 +992,10 @@ class Ui_MainWindow(object):
         brush = QtGui.QBrush(QtGui.QColor(210, 210, 210))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.ButtonText, brush)
-        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
-        brush.setStyle(QtCore.Qt.NoBrush)
+        brush = QtGui.QBrush(QtGui.QColor(39, 44, 54))
+        brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.Base, brush)
-        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0, 0))
+        brush = QtGui.QBrush(QtGui.QColor(39, 44, 54))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.Window, brush)
         brush = QtGui.QBrush(QtGui.QColor(210, 210, 210, 128))
@@ -967,7 +1004,7 @@ class Ui_MainWindow(object):
         brush = QtGui.QBrush(QtGui.QColor(210, 210, 210))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.WindowText, brush)
-        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0, 0))
+        brush = QtGui.QBrush(QtGui.QColor(39, 44, 54))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Button, brush)
         brush = QtGui.QBrush(QtGui.QColor(210, 210, 210))
@@ -976,30 +1013,30 @@ class Ui_MainWindow(object):
         brush = QtGui.QBrush(QtGui.QColor(210, 210, 210))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.ButtonText, brush)
-        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
-        brush.setStyle(QtCore.Qt.NoBrush)
+        brush = QtGui.QBrush(QtGui.QColor(39, 44, 54))
+        brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Base, brush)
-        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0, 0))
+        brush = QtGui.QBrush(QtGui.QColor(39, 44, 54))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Window, brush)
         brush = QtGui.QBrush(QtGui.QColor(210, 210, 210, 128))
         brush.setStyle(QtCore.Qt.NoBrush)
         palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.PlaceholderText, brush)
         self.tableView_episodes.setPalette(palette)
-        self.tableView_episodes.setStyleSheet("QTableWidget {    \n"
+        self.tableView_episodes.setStyleSheet("QTableView {    \n"
 "    background-color: rgb(39, 44, 54);\n"
 "    padding: 10px;\n"
 "    border-radius: 5px;\n"
 "    gridline-color: rgb(44, 49, 60);\n"
 "    border-bottom: 1px solid rgb(44, 49, 60);\n"
 "}\n"
-"QTableWidget::item{\n"
+"QTableView::item{\n"
 "    border-color: rgb(44, 49, 60);\n"
 "    padding-left: 5px;\n"
 "    padding-right: 5px;\n"
 "    gridline-color: rgb(44, 49, 60);\n"
 "}\n"
-"QTableWidget::item:selected{\n"
+"QTableView::item:selected{\n"
 "    background-color: rgb(85, 170, 255);\n"
 "}\n"
 "QScrollBar:horizontal {\n"
@@ -1725,7 +1762,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget.setCurrentIndex(3)
+        self.stackedWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         MainWindow.setTabOrder(self.btn_minimize, self.btn_close)
         MainWindow.setTabOrder(self.btn_close, self.btn_toggle_menu)

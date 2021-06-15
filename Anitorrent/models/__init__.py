@@ -1,3 +1,3 @@
 from .base_models import Episode, Torrent
-from .engine_models import SubsPlease, EraiRaws
-from .table_models import FilterProxyModel, EpisodeTableModel, ScheduleTableModel
+from .plugins import SubsPlease, EraiRaws, Judas, HorribleSubs
+from .table_models import FilterProxyModel, EpisodeTableModel, ScheduleTableModel, SearchTableModel
