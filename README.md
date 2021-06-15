@@ -79,3 +79,4 @@ Just launch the app (`main.py`) and enjoy!
 - [ ] Favorite list
 - [ ] MAL account linking
 - [ ] New themes
+- [ ] Add download history
