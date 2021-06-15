@@ -109,7 +109,7 @@ class EraiRaws:
         EraiRaws.series_search_tag, class_=EraiRaws.series_search_flags)]
     
     def parser(text: str, magnet_link = None, expected = None) -> Episode:
-        text = re.sub('\[...?\]| END', '', text) # clean [v0]/[VRV]/[BD]
+        text = re.sub('\[...?\]| END', '', text).replace('[Erai-raws]', '') # clean [v0]/[VRV]/[BD]
         multi, info = '', ''
         
         if len(r := re.findall('\[(.*?)\]', text)) == 2:
@@ -307,7 +307,7 @@ class HorribleSubs:
             return None
 
     def parser(raw_name, magnet_link=None, expected = None) -> Episode:
-        
+        raw_name = raw_name.replace('[HorribleSubs]', '')
         if '(Batch)' in raw_name:
             batch = True
             suffix = ''
