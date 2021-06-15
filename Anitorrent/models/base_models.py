@@ -44,11 +44,11 @@ class Torrent:
 
         self.postprocess = self.__config.postprocess
         
-        self.new_name = f'{episode_obj.title}{episode_obj.suffix}'
-        self.parent = episode_obj.series_name.removesuffix('.')
+        self.parent = episode_obj.series_name.removesuffix('.').strip()
         self.qb_download_path = ''
 
-        self.title = episode_obj.title
+        self.title = episode_obj.title.strip()
+        self.new_name = f'{self.title}{episode_obj.suffix}'
         self.is_folder = True if episode_obj.batch.lower() == 'true' else False
 
         if self.is_folder:
