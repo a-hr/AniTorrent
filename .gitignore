@@ -20,6 +20,7 @@ share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+*.lnk
 MANIFEST
 
 # PyInstaller
@@ -28,6 +29,7 @@ MANIFEST
 
 # Tests
 tests/
+tests.py
 
 # Environment
 anienv/
