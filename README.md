@@ -20,14 +20,12 @@ Browse and download anime at max speed effortlessly, without any ads and at the 
 
 ## Changelog
 
-- Updated Schedule: clicking on a show will retrieve its episodes for the selected fansub.
+- Updated search engine: now the user is able to search on multiple sources simultaneously.
+- Improved parser.
+- Added plugin system (easier to add new sources)
 - General bugfixes:
-  - The app will check for a running WebUI server and launch it on background if needed.
-  - Existence of download path is checked on startup to prevent errors during downloading.
-- Future updates:
-  - Support for episode streaming without downloading (`VLC`).
-  - 2 new fansubs: HorribleSubs (huge amount of old series) and Judas.
- 
+  - Internal type checking improved.
+  - Improved error handling.
  
 ## Supported Systems
 
@@ -39,7 +37,8 @@ Browse and download anime at max speed effortlessly, without any ads and at the 
 
 - [Erai Raws](https://www.erai-raws.info/): subtitles in many languages (Eng, Sp, Ger, Ita, Pt...), includes older series than SubsPlease.
 - [SubsPlease](https://subsplease.org/): currently covers roughly all of the airing animes.
-- *On next updates*: `Judas`, `HorribleSubs` 
+- Judas: some airing shows and NSFW uncensored stuff.
+- HorribleSubs: not updating anymore, but still a big resource for old series. 
 - More to come (feel free to ask through pull requests)
 
 ## Installation
@@ -63,12 +62,20 @@ Aditionally, compiled binaries (`.exe`) can be downloaded for Windows through Re
 
 ### Dependencies
 
-This package depends on:
+This package is built upon:
 - qBittorrent-api
 - Requests
 - BeautifulSoup
-- Cloudscrape
+- Cloudscraper
 
 ## Usage
 
 Just launch the app (`main.py`) and enjoy!
+
+##  To-do
+
+- [ ] Support for episode streaming without downloading (`VLC`)
+- [x] 2 new fansubs: HorribleSubs (huge amount of old series) and Judas
+- [ ] Favorite list
+- [ ] MAL account linking
+- [ ] New themes
