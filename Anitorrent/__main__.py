@@ -1,5 +1,6 @@
 import ctypes
 import datetime
+import sys
 from pathlib import Path
 
 import psutil
@@ -685,3 +686,15 @@ class AiringToday(QtWidgets.QWidget, Ui_AiringToday):
         self.clicked = True
 
         return QtWidgets.QWidget.mouseMoveEvent(self, event)
+
+
+def launch():
+    app = QtWidgets.QApplication(sys.argv)
+    QtGui.QFontDatabase.addApplicationFont('ui/fonts/segoeui.ttf')
+    QtGui.QFontDatabase.addApplicationFont('ui/fonts/segoeuib.ttf')
+    window = MainWindow()
+    sys.exit(app.exec_())
+
+
+if __name__ == '__main__':
+    launch()
