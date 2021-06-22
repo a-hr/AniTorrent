@@ -1,1 +1,1 @@
-from .main import launch
+from .AniTorrent import launch as AniTorrent

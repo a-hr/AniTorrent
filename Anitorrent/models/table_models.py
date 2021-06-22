@@ -129,13 +129,13 @@ class ScheduleTableModel(QAbstractTableModel):
         super(ScheduleTableModel, self).__init__()
         
         self.HEADERS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-        self.data = data
+        self._data = data
 
     def flags(self, index):
         return Qt.ItemIsSelectable | Qt.ItemIsEnabled
 
     def rowCount(self, *args, **kwargs):
-        return max([len(col) for col in self.data])
+        return max([len(col) for col in self._data])
 
     def columnCount(self, *args, **kwargs):
         return len(self.HEADERS)
@@ -152,7 +152,7 @@ class ScheduleTableModel(QAbstractTableModel):
         if role == Qt.DisplayRole:
             
             try:
-                content = self.data[day][show][0]
+                content = self._data[day][show][0]
             except:
                 content = ''
             finally:
@@ -163,14 +163,14 @@ class ScheduleTableModel(QAbstractTableModel):
         
         elif role == Qt.ToolTipRole:
             try:
-                content = self.data[day][show][0]
+                content = self._data[day][show][0]
             except:
                 content = ''
             finally:
                 return content if content else None
 
     def return_selected(self, index):
-        return self.data[index.column()][index.row()][0]
+        return self._data[index.column()][index.row()][0]
 
 
 class SearchTableModel(QAbstractTableModel):
@@ -179,16 +179,16 @@ class SearchTableModel(QAbstractTableModel):
         super(SearchTableModel, self).__init__()        
         self.HEADERS = ['Title', 'Fansub']
 
-        self.data = []
+        self._data = []
         for fansub, titles in data.items():
             for title in titles:
-                self.data.append((title, fansub))
+                self._data.append((title, fansub))
 
     def flags(self, index):
         return Qt.ItemIsSelectable | Qt.ItemIsEnabled
 
     def rowCount(self, *args, **kwargs):
-        return len(self.data)
+        return len(self._data)
 
     def columnCount(self, *args, **kwargs):
         return len(self.HEADERS)
@@ -203,10 +203,10 @@ class SearchTableModel(QAbstractTableModel):
         col = index.column()
 
         if role == Qt.DisplayRole:
-            return self.data[row][col]
+            return self._data[row][col]
 
         elif role == Qt.TextAlignmentRole:
             return Qt.AlignCenter
 
     def return_selected(self, index):
-        return self.data[index.row()]
+        return self._data[index.row()]

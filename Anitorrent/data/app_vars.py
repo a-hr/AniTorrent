@@ -1,16 +1,16 @@
 from pathlib import Path
 from PyQt5.QtCore import QSettings
 
+
 class Config:
 
     __slots__ = (
-        'root_folder', 'config_file', 'log_file', 'icon', 'qbittorrent_path', 'download_path',
-        'postprocess', 'user_label', 'custom_WebUI', 'user_WebUI', 'pass_WebUI', 'port_WebUI',
-        'plugins', '__settings'
-    )
+        'root_folder', 'config_file', 'log_file', 'icon', 'qbittorrent_path',
+        'download_path', 'postprocess', 'user_label', 'custom_WebUI', 'user_WebUI',
+        'pass_WebUI', 'port_WebUI', 'plugins', '__settings')
 
     def __init__(self):
-        
+
         self.root_folder = Path(__file__).resolve().parent.parent
         self.config_file = str(self.root_folder / 'data' / 'config.ini')
         self.log_file = str(self.root_folder / 'data' / 'log.txt')
@@ -24,7 +24,7 @@ class Config:
 
         self.qbittorrent_path = self.__settings.value('qBittorrent')
         self.download_path = self.__settings.value('Downloads')
-        
+
         self.__settings.endGroup()
 
         # Settings
@@ -45,10 +45,14 @@ class Config:
 
         self.plugins = []
 
-        self.plugins.append(('SubsPlease', True))# self.__settings.value('SubsPlease', type=bool)))
-        self.plugins.append(('EraiRaws', self.__settings.value('EraiRaws', type=bool)))
-        self.plugins.append(('Judas', self.__settings.value('Judas', type=bool)))
-        self.plugins.append(('HorribleSubs', self.__settings.value('HorribleSubs', type=bool)))
+        # self.__settings.value('SubsPlease', type=bool)))
+        self.plugins.append(('SubsPlease', True))
+        self.plugins.append(
+            ('EraiRaws', self.__settings.value('EraiRaws', type=bool)))
+        self.plugins.append(
+            ('Judas', self.__settings.value('Judas', type=bool)))
+        self.plugins.append(
+            ('HorribleSubs', self.__settings.value('HorribleSubs', type=bool)))
 
         self.__settings.endGroup()
 
@@ -58,19 +62,21 @@ class Config:
         self.__settings.beginGroup('Folders')
         opt_array = ('qBittorrent', 'Downloads')
 
-        [self.__settings.setValue(opt, val) for opt, val in zip(opt_array, options['val_folders'])]
-        
+        [self.__settings.setValue(opt, val) for opt, val in zip(
+            opt_array, options['val_folders'])]
+
         self.__settings.endGroup()
         # </Folders>
 
         # <Settings>
         self.__settings.beginGroup('Settings')
-        opt_array = ('postprocess', 'userLabel', 'WebUIkeys', 'user', 'pass', 'port')
-        
-        [self.__settings.setValue(opt, val) for opt, val in zip(opt_array, options['val_settings'])]
+        opt_array = ('postprocess', 'userLabel',
+                     'WebUIkeys', 'user', 'pass', 'port')
+
+        [self.__settings.setValue(opt, val) for opt, val in zip(
+            opt_array, options['val_settings'])]
 
         self.__settings.endGroup()
         # </Settings>
 
         self.__settings.sync()
-

@@ -1,10 +1,10 @@
 import sys
-import traceback
 import time
-import qbittorrentapi
+import traceback
 
-from PyQt5 import QtCore
+import qbittorrentapi
 from models import Torrent
+from PyQt5 import QtCore
 
 
 class ProgressObserver(QtCore.QObject):
@@ -19,7 +19,7 @@ class ProgressObserver(QtCore.QObject):
         super().__init__()
 
         self.config = config
-        
+
         self.running = False
         self.torrents = []
 
@@ -35,9 +35,9 @@ class ProgressObserver(QtCore.QObject):
             response = self.qbt_client.torrents_info(
                 torrent_hash=torrent.torrent_hash,
                 SIMPLE_RESPONSES=True)
-            
-            datas = [data for data in response 
-            if data['hash'] == torrent.torrent_hash]
+
+            datas = [data for data in response
+                     if data['hash'] == torrent.torrent_hash]
 
             if not datas:
                 self.torrent_canceled.emit(torrent)
@@ -56,15 +56,15 @@ class ProgressObserver(QtCore.QObject):
             self.torrents = []
 
     @QtCore.pyqtSlot(list)
-    def startTimer(self, torrents:list[Torrent]):
+    def startTimer(self, torrents: list[Torrent]):
 
         if not self.running:
             self.running = True
             self.torrents = [torrent for torrent in torrents]
-        
+
         else:
-            [self.torrents.append(torrent)for torrent in torrents 
-            if torrent not in self.torrents]
+            [self.torrents.append(torrent)for torrent in torrents
+             if torrent not in self.torrents]
 
 
 class ProcessSignals(QtCore.QObject):

@@ -1,15 +1,15 @@
 import ctypes
 import datetime
-import psutil
-import sys
-
-from PyQt5 import QtCore, QtGui, QtWidgets
 from pathlib import Path
 
-from ui import Ui_MainWindow, Ui_AiringToday, Ui_Schedule, CheckableComboBox
+import psutil
+from PyQt5 import QtCore, QtGui, QtWidgets
+
 from data import Config
+from models import (EpisodeTableModel, FilterProxyModel, ScheduleTableModel,
+                    SearchTableModel)
 from tools import Functions, PluginEngine
-from models import FilterProxyModel, EpisodeTableModel, ScheduleTableModel, SearchTableModel
+from ui import CheckableComboBox, Ui_AiringToday, Ui_MainWindow, Ui_Schedule
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -26,7 +26,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.uiDefinitions()
 
         self.show()
-        
+
         if not Path(f'{self.config.download_path}').exists():
             self.stackedWidget.setCurrentIndex(3)
             warning = "The provided download path does not exist. Please select a new one."
@@ -43,14 +43,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setWindowIcon(QtGui.QIcon(self.config.icon))
         myappid = u'Kajiya_aru.AniTorrent.v1_0_0'
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
-        
+
         self.threadpool = QtCore.QThreadPool()
 
         self.functions.start_observing()
 
         if not "qbittorrent.exe" in (p.name() for p in psutil.process_iter()):
             import os
-            os.system(f'cmd /c "start /min "" "{self.config.qbittorrent_path}""')
+            os.system(
+                f'cmd /c "start /min "" "{self.config.qbittorrent_path}""')
         # </Setup>
 
         # <GUI Properties>
@@ -88,7 +89,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.tableWidget_downloads.setHorizontalHeaderLabels((
             "Name", "Progress", "Remaining"))
 
-        header = self.tableWidget_downloads.horizontalHeader()       
+        header = self.tableWidget_downloads.horizontalHeader()
         header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
         header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
         header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
@@ -122,7 +123,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     # <UI Management>
     def setup_menus(self):
 
-        self.btn_toggle_menu.clicked.connect(lambda: self.toggleMenu(220, True))
+        self.btn_toggle_menu.clicked.connect(
+            lambda: self.toggleMenu(220, True))
 
         self.stackedWidget.setMinimumWidth(20)
         self.addNewMenu(
@@ -130,7 +132,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             "btn_search",
             "url(:/16x16/icons/16x16/cil-magnifying-glass.png)", True)
         self.addNewMenu(
-            "Results","btn_results",
+            "Results", "btn_results",
             "url(:/16x16/icons/16x16/cil-browser.png)", True)
         self.addNewMenu(
             "Downloads",
@@ -150,13 +152,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.labelPage('SEARCH')
 
     def setup_settings(self):
-        
+
         self.lineEdit_qB_path.setText(self.config.qbittorrent_path)
         self.lineEdit_download_path.setText(self.config.download_path)
 
         self.checkBox_cancel_postprocessing.setCheckState(
             QtCore.Qt.Unchecked if self.config.postprocess else QtCore.Qt.Checked)
-    
+
         self.checkBox_custom_WebUi.setCheckState(
             QtCore.Qt.Checked if self.config.custom_WebUI else QtCore.Qt.Unchecked)
         self.checkBox_custom_WebUi.stateChanged.connect(
@@ -169,7 +171,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.lineEdit_username.setText(self.config.user_label)
         self.label_user_icon.setText(self.config.user_label)
-            
+
     def uiDefinitions(self):
 
         self.shadow = QtWidgets.QGraphicsDropShadowEffect(self)
@@ -267,7 +269,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         for w in self.frame_left_menu.findChildren(QtWidgets.QPushButton):
             if w.objectName() == widget:
                 w.setStyleSheet(self.selectMenu(w.styleSheet()))
-    
+
     def resetStyle(self, widget):
         for w in self.frame_left_menu.findChildren(QtWidgets.QPushButton):
             if w.objectName() != widget:
@@ -288,8 +290,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         qm = QtWidgets.QMessageBox()
         qm.information(self, title, message)
 
-    def download_table_refresh(self, torrents:list):
-        
+    def download_table_refresh(self, torrents: list):
+
         self.tableWidget_downloads.clearContents()
         self.tableWidget_downloads.setRowCount(len(torrents))
 
@@ -322,13 +324,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def save_settings(self):
 
         reply = QtWidgets.QMessageBox.question(
-                self,
-                'Change settings',
-                """Settings will be saved and app reloaded.
+            self,
+            'Change settings',
+            """Settings will be saved and app reloaded.
                 \nAre you sure you want to proceed?""",
-                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
-                QtWidgets.QMessageBox.No)
-                
+            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+            QtWidgets.QMessageBox.No)
+
         if reply == QtWidgets.QMessageBox.Yes:
 
             val_folders = (
@@ -346,7 +348,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.config.save_changes(
                 val_folders=val_folders,
                 val_settings=val_settings)
-            
+
             self.info_box('Completed', 'Settings were updated.')
 
         else:
@@ -381,7 +383,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     @QtCore.pyqtSlot(QtCore.QModelIndex)
     def load_childs(self, parent) -> None:
-        
+
         result = self.functions.episodes(QModelIndex=parent)
         if isinstance(result, list):
             self.episodes_model = EpisodeTableModel(result, self.config)
@@ -389,63 +391,65 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.episodes_proxymodel.setSourceModel(self.episodes_model)
             self.tableView_episodes.setModel(self.episodes_proxymodel)
 
-            header = self.tableView_episodes.horizontalHeader()       
+            header = self.tableView_episodes.horizontalHeader()
             header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
-            header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
+            header.setSectionResizeMode(
+                3, QtWidgets.QHeaderView.ResizeToContents)
 
             self.stackedWidget.setCurrentIndex(1)
             self.swapMenus("btn_results")
         else:
             self.info_box('Empty query', result)
 
-    def load_child_from_table(self, parent_fansub:tuple) -> None:
-        
+    def load_child_from_table(self, parent_fansub: tuple) -> None:
+
         self.current_fansub = parent_fansub[1]
-        result = self.functions.episodes(selected_series=parent_fansub[0])
-        
+        print(parent_fansub)
+        result = self.functions.episodes(table_response=parent_fansub)
+
         self.episodes_model = EpisodeTableModel(result, self.config)
         self.episodes_proxymodel = FilterProxyModel()
         self.episodes_proxymodel.setSourceModel(self.episodes_model)
         self.tableView_episodes.setModel(self.episodes_proxymodel)
 
-        header = self.tableView_episodes.horizontalHeader()       
+        header = self.tableView_episodes.horizontalHeader()
         header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
         header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
 
         self.stackedWidget.setCurrentIndex(1)
         self.swapMenus("btn_results")
-    
+
     @QtCore.pyqtSlot(bool)
     def download(self, *args) -> None:
 
-        torrent_list = self.episodes_model.returnSelected() # raw
+        torrent_list = self.episodes_model.returnSelected()  # raw
         self.episodes_model.refresh()
 
-        torrent_list = self.functions.download(torrent_list) # hash + qb_path 
+        torrent_list = self.functions.download(torrent_list)  # hash + qb_path
         self.functions.send_torrents.emit(torrent_list)
 
         if torrent_list:
             self.stackedWidget.setCurrentIndex(2)
             self.swapMenus("btn_downloads")
-        
+
     # <Slots>
     @QtCore.pyqtSlot()
-    def select_file_dir(self, select:str) -> None:
+    def select_file_dir(self, select: str) -> None:
 
-        if select=='download_dir':
+        if select == 'download_dir':
             dir = QtWidgets.QFileDialog.getExistingDirectory(
                 self,
                 'Select folder',
                 options=QtWidgets.QFileDialog.ShowDirsOnly)
-                
+
             self.lineEdit_download_path.setText(dir)
 
-        elif select=='qbt_path':
+        elif select == 'qbt_path':
             file = QtWidgets.QFileDialog.getOpenFileName(
                 self,
                 'Select file',
                 'C:\Program Files\qBittorrent')
-            
+
             self.lineEdit_qB_path.setText(file[0])
 
     @QtCore.pyqtSlot(bool)
@@ -454,7 +458,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.episodes_proxymodel.clearFilters()
 
         if not reset:
-            filter_quality = self.comboBox_quality.currentText() if self.comboBox_quality.currentIndex()>0 else ''
+            filter_quality = self.comboBox_quality.currentText(
+            ) if self.comboBox_quality.currentIndex() > 0 else ''
             filter_batch = 'True' if self.checkBox_batch.isChecked() else ''
 
             self.episodes_proxymodel.setFilterByColumn(1, filter_quality)
@@ -470,13 +475,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.scheduleWindow = ScheduleWindow()
         self.scheduleWindow.show()
         self.scheduleWindow.search_title.connect(self.load_child_from_table)
-    
+
     @QtCore.pyqtSlot()
     def save_settings_reload(self):
         self.save_settings()
         self.config = Config()
         self.setup_settings()
-  
+
     @QtCore.pyqtSlot()
     def Button(self):
         btnWidget = self.sender()
@@ -534,7 +539,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         return QtWidgets.QMainWindow.mouseMoveEvent(self, event)
 
     def closeEvent(self, event):
-        
+
         if self.functions.progressThread.running:
             # TO-DO
             # pickle self.functions.progressThread.torrents for recover on restart
@@ -543,7 +548,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.functions.thread.quit()
 
         if self.functions.post_processing:
-            
+
             reply = QtWidgets.QMessageBox.question(
                 self,
                 'Quit',
@@ -551,7 +556,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 \nAre you sure you want to quit?""",
                 QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
                 QtWidgets.QMessageBox.No)
-                
+
             if reply == QtWidgets.QMessageBox.Yes:
                 event.accept()
             else:
@@ -559,9 +564,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
 class ScheduleWindow(QtWidgets.QWidget, Ui_Schedule):
-    
+
     search_title = QtCore.pyqtSignal(tuple)
-    
+
     def __init__(self):
         QtWidgets.QWidget.__init__(self)
         self.setupUi(self)
@@ -569,7 +574,7 @@ class ScheduleWindow(QtWidgets.QWidget, Ui_Schedule):
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         self.engine = PluginEngine()
-        
+
         # <Load GUI properties>
         self.comboBox.addItems(self.engine.SCHEDULE)
         self.clicked = False
@@ -591,7 +596,8 @@ class ScheduleWindow(QtWidgets.QWidget, Ui_Schedule):
 
         self.tableViewSchedule.verticalHeader().setVisible(False)
         space = self.tableViewSchedule.minimumWidth() - 30
-        [self.tableViewSchedule.setColumnWidth(col, int(space / 7)) for col in range(7)]
+        [self.tableViewSchedule.setColumnWidth(
+            col, int(space / 7)) for col in range(7)]
 
     @QtCore.pyqtSlot(QtCore.QModelIndex)
     def search_clicked(self, index):
@@ -599,7 +605,7 @@ class ScheduleWindow(QtWidgets.QWidget, Ui_Schedule):
             self.model.return_selected(index),
             self.comboBox.currentText()))
         self.close()
-        
+
     # <App Events>
     def mousePressEvent(self, event):
         self.old_pos_x = int(event.screenPos().x())
@@ -656,8 +662,11 @@ class AiringToday(QtWidgets.QWidget, Ui_AiringToday):
 
     def populate_table(self):
         self.setupTable()
-        data = self.engine.update_schedule(self.comboBox.currentText())[self.today]
-        item = lambda d: (QtGui.QStandardItem(d[0]), QtGui.QStandardItem(d[1]))
+        data = self.engine.update_schedule(
+            self.comboBox.currentText())[self.today]
+
+        def item(d): return (QtGui.QStandardItem(
+            d[0]), QtGui.QStandardItem(d[1]))
         [self.model.appendRow(item(show)) for show in data]
 
     # <App Events>
@@ -676,14 +685,3 @@ class AiringToday(QtWidgets.QWidget, Ui_AiringToday):
         self.clicked = True
 
         return QtWidgets.QWidget.mouseMoveEvent(self, event)
-
-
-def launch():
-    app = QtWidgets.QApplication(sys.argv)
-    QtGui.QFontDatabase.addApplicationFont('ui/fonts/segoeui.ttf')
-    QtGui.QFontDatabase.addApplicationFont('ui/fonts/segoeuib.ttf')
-    window = MainWindow()
-    sys.exit(app.exec_())
-
-if __name__ == "__main__":
-    launch()
