@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import QItemDelegate, QProgressBar, QAbstractItemDelegate
 from models import Episode, Torrent
 
 
-class FilterProxyModel(QSortFilterProxyModel):    
+class FilterProxyModel(QSortFilterProxyModel):
     def __init__(self, *args, **kwargs):
         QSortFilterProxyModel.__init__(self, *args, **kwargs)
         self.filters = {}
@@ -14,7 +14,7 @@ class FilterProxyModel(QSortFilterProxyModel):
     def setFilterByColumn(self, column, regex):
         if isinstance(regex, str):
             regex = re.compile(regex)
-            
+
         self.filters[column] = regex
         self.invalidateFilter()
 
@@ -45,15 +45,11 @@ class FilterProxyModel(QSortFilterProxyModel):
 
 class EpisodeTableModel(QAbstractTableModel):
 
-    def __init__(
-        self,
-        episode_list: list[Episode],
-        config
-        ) -> None:
-        
+    def __init__(self, episode_list: list[Episode], config) -> None:
         super(EpisodeTableModel, self).__init__()
-        
-        self.HEADERS = ['Title', 'Quality', 'Full Season', 'MultiSubs', 'Extra Info']
+
+        self.HEADERS = ['Title', 'Quality',
+                        'Full Season', 'MultiSubs', 'Extra Info']
         self.episodes = episode_list
         self.checked = [False for _ in range(len(self.episodes))]
         self.__config = config
@@ -62,7 +58,7 @@ class EpisodeTableModel(QAbstractTableModel):
 
         if index.column() == 0:
             return Qt.ItemIsEnabled | Qt.ItemIsUserCheckable
-        
+
         return Qt.ItemIsEnabled
 
     def rowCount(self, *args, **kwargs):
@@ -85,16 +81,16 @@ class EpisodeTableModel(QAbstractTableModel):
 
             if col == 0:
                 return episode.title
-            
+
             elif col == 1:
                 return episode.quality
-            
+
             elif col == 2:
                 return episode.batch
 
             elif col == 3:
                 return episode.multi
-            
+
             elif col == 4:
                 return episode.info
 
@@ -103,19 +99,19 @@ class EpisodeTableModel(QAbstractTableModel):
 
         elif role == Qt.CheckStateRole and col == 0:
             return Qt.Checked if self.checked[row] else Qt.Unchecked
-            
+
     def setData(self, index, value, role):
         row = index.row()
         col = index.column()
         if role == Qt.CheckStateRole and col == 0:
             self.checked[row] = True if value == Qt.Checked else False
-        return True     
+        return True
 
     # ------ CUSTOMS ------
     def returnSelected(self) -> Torrent:
         return [self.__to_torrent(ep) for ep, ii in zip(self.episodes, self.checked) if ii]
 
-    def __to_torrent(self, ep_obj:Episode) -> Torrent:
+    def __to_torrent(self, ep_obj: Episode) -> Torrent:
         return Torrent(ep_obj, self.__config)
 
     def refresh(self):
@@ -124,11 +120,12 @@ class EpisodeTableModel(QAbstractTableModel):
 
 
 class ScheduleTableModel(QAbstractTableModel):
-    
-    def __init__(self, data) -> None:   
+
+    def __init__(self, data) -> None:
         super(ScheduleTableModel, self).__init__()
-        
-        self.HEADERS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+
+        self.HEADERS = ['Monday', 'Tuesday', 'Wednesday',
+                        'Thursday', 'Friday', 'Saturday', 'Sunday']
         self._data = data
 
     def flags(self, index):
@@ -150,7 +147,7 @@ class ScheduleTableModel(QAbstractTableModel):
         day = index.column()
 
         if role == Qt.DisplayRole:
-            
+
             try:
                 content = self._data[day][show][0]
             except:
@@ -160,7 +157,7 @@ class ScheduleTableModel(QAbstractTableModel):
 
         elif role == Qt.TextAlignmentRole:
             return Qt.AlignCenter
-        
+
         elif role == Qt.ToolTipRole:
             try:
                 content = self._data[day][show][0]
@@ -174,9 +171,9 @@ class ScheduleTableModel(QAbstractTableModel):
 
 
 class SearchTableModel(QAbstractTableModel):
-    
-    def __init__(self, data) -> None:   
-        super(SearchTableModel, self).__init__()        
+
+    def __init__(self, data) -> None:
+        super(SearchTableModel, self).__init__()
         self.HEADERS = ['Title', 'Fansub']
 
         self._data = []
