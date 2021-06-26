@@ -171,12 +171,12 @@ class EraiRaws:
         schedule = {
             serie.find('h4', class_='alphabet-title').text.strip(): EraiRaws._format_schedule(serie)
             for serie in soup.find_all(
-                'div', class_='col-12 col-sm-12 col-md-12 col-lg-12 emain era_center'
+                'div', class_='emain era_center'
             )
         }
 
         today_soup = soup.find(
-            'div', class_='col-12 col-sm-12 col-md-12 col-lg-12 emain era_center_yel'
+            'div', class_='emain era_center_yel'
         )
 
         today_day = today_soup.find(
