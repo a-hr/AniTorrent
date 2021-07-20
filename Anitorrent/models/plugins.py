@@ -66,13 +66,15 @@ class SubsPlease:
         return schedule
 
     def parser(text: str, magnet_link=None, expected=None) -> list:
+        text = text.removeprefix('[SubsPlease]')
         r = re.findall('\[(.*?)\]', text.strip())
         batch = True if (code := r[0]) == 'Batch' else False
         clean_text = text.replace(
             f'[{code}]', '').replace('v1', '').replace('v2', '')
 
         if batch:
-            info, quality = re.findall('\((.*?)\)', clean_text)
+            par = re.findall('\((.*?)\)', clean_text)
+            info, quality = par[1:] if len(par) > 2 else par
             title = clean_text.replace(
                 f'({info})', '').replace(f'({quality})', '').strip()
 
