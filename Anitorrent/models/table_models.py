@@ -121,7 +121,7 @@ class EpisodeTableModel(QAbstractTableModel):
 
 class ScheduleTableModel(QAbstractTableModel):
 
-    def __init__(self, data) -> None:
+    def __init__(self, data: list[list]) -> None:
         super(ScheduleTableModel, self).__init__()
 
         self.HEADERS = ['Monday', 'Tuesday', 'Wednesday',
@@ -149,7 +149,7 @@ class ScheduleTableModel(QAbstractTableModel):
         if role == Qt.DisplayRole:
 
             try:
-                content = self._data[day][show][0]
+                content = self._data[day][show].title
             except:
                 content = ''
             finally:
@@ -160,14 +160,14 @@ class ScheduleTableModel(QAbstractTableModel):
 
         elif role == Qt.ToolTipRole:
             try:
-                content = self._data[day][show][0]
+                content = self._data[day][show].title
             except:
                 content = ''
             finally:
                 return content if content else None
 
     def return_selected(self, index):
-        return self._data[index.column()][index.row()][0]
+        return self._data[index.column()][index.row()]
 
 
 class SearchTableModel(QAbstractTableModel):

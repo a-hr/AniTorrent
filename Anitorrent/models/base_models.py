@@ -1,4 +1,6 @@
+import re
 import time
+from datetime import datetime, timedelta
 from pathlib import Path
 from random import randint
 
@@ -95,3 +97,24 @@ class Torrent:
 
     def log_error(self, error):
         pass
+
+
+class AiringAnime:
+
+    def __init__(self, **kwargs) -> None:
+        self.title: str = kwargs['title']
+        self.mal_id: str = kwargs['mal_id']
+        self.score: float = kwargs['score']
+        self.url: str = kwargs['url']
+        self.episodes: int = kwargs['episodes']
+        self.__set_schedule(kwargs['airing_start'])
+
+    def __set_schedule(self, time_str: str):
+        a = re.findall("(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})", time_str)[0]
+        a = [int(x) for x in a]
+        self.airing_day: int = datetime(*a[:3]).weekday()
+        self.airing_time: str = (
+            datetime(*a) + timedelta(hours=3)).strftime('%H:%M')
+
+    def __repr__(self) -> str:
+        return f'{self.title}: {self.score}\n{self.airing_time}'

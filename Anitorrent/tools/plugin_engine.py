@@ -1,8 +1,11 @@
 import re
+from datetime import datetime
+from functools import lru_cache
 from math import ceil
 
 import requests
 from bs4 import BeautifulSoup
+from models import AiringAnime
 from models.plugins import EraiRaws, HorribleSubs, Judas, SubsPlease
 
 
@@ -17,15 +20,32 @@ class PluginEngine:
 
         self.FANSUBS = {fansub: FANSUBS[fansub]
                         for fansub in fansubs} if fansubs else FANSUBS
-        self.SCHEDULE = ('SubsPlease', 'EraiRaws')
         self.SEARCH_URL = 'https://nyaa.si/user/{}?f=0&c=0_0&q={}&p={}'
 
-    def update_schedule(self, selected_fansub: str) -> list:
-        try:
-            handler = getattr(self.FANSUBS[selected_fansub], 'update_schedule')
-        except AttributeError:
-            return 'Not implemented for this fansub.'
-        return handler()
+    @lru_cache()
+    def update_schedule(self, today: bool = False) -> list[list]:
+        r = requests.get(
+            f'https://api.jikan.moe/v3/season/').json()['anime']
+
+        response = [[] for _ in range(7)]
+        for anime in r:
+            if anime['type'] == 'TV':
+                response[(a := AiringAnime(**anime)).airing_day].append(a)
+
+        def rating(anime: AiringAnime) -> float:
+            return anime.score if anime.score else 0
+
+        def time_sorter(anime: AiringAnime) -> int:
+            hour, minute = anime.airing_time.split(':')
+            return int(hour)*60 + int(minute)
+
+        if today:
+            response = sorted(
+                response[datetime.today().weekday()], key=time_sorter)
+        else:
+            [day.sort(key=rating, reverse=True) for day in response]
+
+        return response
 
     def select_parser(self, selected_fansub: str) -> object:
         return getattr(self.FANSUBS[selected_fansub], 'parser')

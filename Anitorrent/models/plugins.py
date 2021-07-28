@@ -51,20 +51,6 @@ class SubsPlease:
         return [serie.text.strip() for serie in soup.find_all(
             SubsPlease.series_search_tag, class_=SubsPlease.series_search_flags)]
 
-    @lru_cache
-    def update_schedule() -> list:
-        schedule_url = 'https://subsplease.org/api/?f=schedule&tz=Europe/Madrid'
-        data = requests.get(schedule_url).json()['schedule']
-        schedule = []
-        trash = ('Link Click',)
-
-        schedule = [
-            [(series['title'], series['time'])
-             for series in data[day] if series['title'] not in trash]
-            for day in data]
-
-        return schedule
-
     def parser(text: str, magnet_link=None, expected=None) -> list:
         text = text.removeprefix('[SubsPlease]')
         r = re.findall('\[(.*?)\]', text.strip())
@@ -149,63 +135,6 @@ class EraiRaws:
             episode_int=ep,
             batch=str(batch),
             magnet_link=magnet_link)
-
-    @lru_cache
-    def update_schedule() -> list:
-
-        link = 'https://www.erai-raws.info/schedule/#Today'
-        days = {
-            0: 'Monday',
-            1: 'Tuesday',
-            2: 'Wednesday',
-            3: 'Thursday',
-            4: 'Friday',
-            5: 'Saturday',
-            6: 'Sunday'
-        }
-        scraper = cloudscraper.create_scraper(
-            interpreter='native',
-        )
-        scraper.headers['Referer'] = 'https://www.erai-raws.info/'
-        response = scraper.get(link)
-        soup = BeautifulSoup(response.content, 'html.parser')
-
-        schedule = {
-            serie.find('h4', class_='alphabet-title').text.strip(): EraiRaws._format_schedule(serie)
-            for serie in soup.find_all(
-                'div', class_='emain era_center'
-            )
-        }
-
-        today_soup = soup.find(
-            'div', class_='emain era_center_yel'
-        )
-
-        today_day = today_soup.find(
-            'h4', class_='alphabet-title'
-        ).text.replace('(Today)', '').replace('\ufeff', '').strip()
-
-        schedule[today_day] = EraiRaws._format_schedule(today_soup)
-
-        return [schedule[days[day_n]] for day_n in range(7)]
-
-    @staticmethod
-    def _format_schedule(soup_object):
-        schedule = []
-
-        times_raw_list = [
-            time.text.strip()
-            for time in soup_object.find_all('span', class_='cccccc')]
-        series_raw_list = [
-            time.parent.a.text.strip()
-            for time in soup_object.find_all('span', class_='cccccc')]
-
-        for serie, time in zip(series_raw_list, times_raw_list):
-            hora = datetime.strptime(time, '%H:%M %p') + timedelta(hours=9)
-            schedule.append(
-                (serie, f"{hora.hour}:{str(hora.minute).ljust(2, '0')}"))
-
-        return schedule
 
 
 class Judas:

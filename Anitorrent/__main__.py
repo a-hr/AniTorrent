@@ -1,5 +1,4 @@
 import ctypes
-import datetime
 import sys
 from pathlib import Path
 
@@ -8,7 +7,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 from data import Config
 from models import (EpisodeTableModel, FilterProxyModel, ScheduleTableModel,
-                    SearchTableModel)
+                    SearchTableModel, AiringAnime)
 from tools import Functions, PluginEngine
 from ui import CheckableComboBox, Ui_AiringToday, Ui_MainWindow, Ui_Schedule
 
@@ -577,21 +576,19 @@ class ScheduleWindow(QtWidgets.QWidget, Ui_Schedule):
         self.engine = PluginEngine()
 
         # <Load GUI properties>
-        self.comboBox.addItems(self.engine.SCHEDULE)
         self.clicked = False
 
         self.frame.setFrameShape(QtWidgets.QFrame.Box)
 
         # <Connections>
-        self.comboBox.currentTextChanged.connect(self.populate_table)
         self.btn_minimize.clicked.connect(lambda: self.showMinimized())
         self.btn_close.clicked.connect(lambda: self.close())
-        self.tableViewSchedule.clicked.connect(self.search_clicked)
+        # self.tableViewSchedule.clicked.connect(self.search_clicked)
 
         self.populate_table()
 
     def populate_table(self):
-        data = self.engine.update_schedule(self.comboBox.currentText())
+        data = self.engine.update_schedule()
         self.model = ScheduleTableModel(data)
         self.tableViewSchedule.setModel(self.model)
 
@@ -600,12 +597,12 @@ class ScheduleWindow(QtWidgets.QWidget, Ui_Schedule):
         [self.tableViewSchedule.setColumnWidth(
             col, int(space / 7)) for col in range(7)]
 
-    @QtCore.pyqtSlot(QtCore.QModelIndex)
-    def search_clicked(self, index):
-        self.search_title.emit((
-            self.model.return_selected(index),
-            self.comboBox.currentText()))
-        self.close()
+    # @QtCore.pyqtSlot(QtCore.QModelIndex)
+    # def search_clicked(self, index):
+    #     self.search_title.emit((
+    #         self.model.return_selected(index),
+    #         self.comboBox.currentText()))
+    #     self.close()
 
     # <App Events>
     def mousePressEvent(self, event):
@@ -633,12 +630,9 @@ class AiringToday(QtWidgets.QWidget, Ui_AiringToday):
 
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
-
-        self.today = datetime.datetime.today().weekday()
         self.engine = PluginEngine()
 
         # <Load GUI properties>
-        self.comboBox.addItems(self.engine.SCHEDULE)
         self.clicked = False
 
         self.bg.setFrameShape(QtWidgets.QFrame.Box)
@@ -647,7 +641,6 @@ class AiringToday(QtWidgets.QWidget, Ui_AiringToday):
         self.tableViewSchedule.setModel(self.model)
 
         # <Connections>
-        self.comboBox.currentTextChanged.connect(self.populate_table)
         self.btn_minimize.clicked.connect(lambda: self.showMinimized())
         self.btn_close.clicked.connect(lambda: self.close())
 
@@ -655,19 +648,23 @@ class AiringToday(QtWidgets.QWidget, Ui_AiringToday):
 
     def setupTable(self):
         self.model.clear()
-        self.model.setColumnCount(2)
-        self.model.setHorizontalHeaderLabels(['Time', 'Show'])
+        self.model.setColumnCount(3)
+        self.model.setHorizontalHeaderLabels(['Time', 'Show', 'Score'])
         self.tableViewSchedule.verticalHeader().setVisible(False)
         self.tableViewSchedule.horizontalHeader().setSectionResizeMode(
             0, QtWidgets.QHeaderView.Stretch)
 
     def populate_table(self):
         self.setupTable()
-        data = self.engine.update_schedule(
-            self.comboBox.currentText())[self.today]
+        data = self.engine.update_schedule(today=True)
 
-        def item(d): return (QtGui.QStandardItem(
-            d[0]), QtGui.QStandardItem(d[1]))
+        def item(d: AiringAnime):
+            title = QtGui.QStandardItem(d.title)
+            _time = QtGui.QStandardItem(d.airing_time)
+            score = QtGui.QStandardItem(str(d.score))
+
+            return title, _time, score
+
         [self.model.appendRow(item(show)) for show in data]
 
     # <App Events>
