@@ -6,8 +6,8 @@ import psutil
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from data import Config
-from models import (EpisodeTableModel, FilterProxyModel, ScheduleTableModel,
-                    SearchTableModel, AiringAnime)
+from models import (AiringAnime, EpisodeTableModel, FilterProxyModel,
+                    ScheduleTableModel, SearchTableModel)
 from tools import Functions, PluginEngine
 from ui import CheckableComboBox, Ui_AiringToday, Ui_MainWindow, Ui_Schedule
 
@@ -377,7 +377,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.model_search = SearchTableModel(results)
             self.tableView_search.setModel(self.model_search)
             self.tableView_search.resizeColumnsToContents()
-            # adjust table resizement
         else:
             self.info_box('Empty query', results)
 
@@ -400,24 +399,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.swapMenus("btn_results")
         else:
             self.info_box('Empty query', result)
-
-    def load_child_from_table(self, parent_fansub: tuple) -> None:
-
-        self.current_fansub = parent_fansub[1]
-        print(parent_fansub)
-        result = self.functions.episodes(table_response=parent_fansub)
-
-        self.episodes_model = EpisodeTableModel(result, self.config)
-        self.episodes_proxymodel = FilterProxyModel()
-        self.episodes_proxymodel.setSourceModel(self.episodes_model)
-        self.tableView_episodes.setModel(self.episodes_proxymodel)
-
-        header = self.tableView_episodes.horizontalHeader()
-        header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
-        header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
-
-        self.stackedWidget.setCurrentIndex(1)
-        self.swapMenus("btn_results")
 
     @QtCore.pyqtSlot(bool)
     def download(self, *args) -> None:
@@ -469,12 +450,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def airingToday(self):
         self.airingTodayWindow = AiringToday()
         self.airingTodayWindow.show()
+        self.airingTodayWindow.search_title.connect(
+            lambda text: self.line_search.setText(text))
 
     @QtCore.pyqtSlot()
     def schedule(self):
         self.scheduleWindow = ScheduleWindow()
         self.scheduleWindow.show()
-        self.scheduleWindow.search_title.connect(self.load_child_from_table)
+        self.scheduleWindow.search_title.connect(
+            lambda text: self.line_search.setText(text))
 
     @QtCore.pyqtSlot()
     def save_settings_reload(self):
@@ -565,7 +549,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 class ScheduleWindow(QtWidgets.QWidget, Ui_Schedule):
 
-    search_title = QtCore.pyqtSignal(tuple)
+    search_title = QtCore.pyqtSignal(str)
 
     def __init__(self):
         QtWidgets.QWidget.__init__(self)
@@ -577,13 +561,12 @@ class ScheduleWindow(QtWidgets.QWidget, Ui_Schedule):
 
         # <Load GUI properties>
         self.clicked = False
-
         self.frame.setFrameShape(QtWidgets.QFrame.Box)
 
         # <Connections>
         self.btn_minimize.clicked.connect(lambda: self.showMinimized())
         self.btn_close.clicked.connect(lambda: self.close())
-        # self.tableViewSchedule.clicked.connect(self.search_clicked)
+        self.tableViewSchedule.clicked.connect(self.search_clicked)
 
         self.populate_table()
 
@@ -597,12 +580,10 @@ class ScheduleWindow(QtWidgets.QWidget, Ui_Schedule):
         [self.tableViewSchedule.setColumnWidth(
             col, int(space / 7)) for col in range(7)]
 
-    # @QtCore.pyqtSlot(QtCore.QModelIndex)
-    # def search_clicked(self, index):
-    #     self.search_title.emit((
-    #         self.model.return_selected(index),
-    #         self.comboBox.currentText()))
-    #     self.close()
+    @QtCore.pyqtSlot(QtCore.QModelIndex)
+    def search_clicked(self, index):
+        self.search_title.emit(self.model.return_selected(index).title)
+        self.close()
 
     # <App Events>
     def mousePressEvent(self, event):
@@ -624,6 +605,8 @@ class ScheduleWindow(QtWidgets.QWidget, Ui_Schedule):
 
 class AiringToday(QtWidgets.QWidget, Ui_AiringToday):
 
+    search_title = QtCore.pyqtSignal(str)
+
     def __init__(self):
         QtWidgets.QWidget.__init__(self)
         self.setupUi(self)
@@ -643,7 +626,7 @@ class AiringToday(QtWidgets.QWidget, Ui_AiringToday):
         # <Connections>
         self.btn_minimize.clicked.connect(lambda: self.showMinimized())
         self.btn_close.clicked.connect(lambda: self.close())
-
+        self.tableViewSchedule.clicked.connect(self.search_clicked)
         self.populate_table()
 
     def setupTable(self):
@@ -666,6 +649,11 @@ class AiringToday(QtWidgets.QWidget, Ui_AiringToday):
             return title, _time, score
 
         [self.model.appendRow(item(show)) for show in data]
+
+    @QtCore.pyqtSlot(QtCore.QModelIndex)
+    def search_clicked(self, index):
+        self.search_title.emit(self.model.itemFromIndex(index).text())
+        self.close()
 
     # <App Events>
     def mousePressEvent(self, event):
