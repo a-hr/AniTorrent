@@ -218,43 +218,6 @@ class Ui_Form(object):
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.frame)
         self.verticalLayout_2.setContentsMargins(18, 9, -1, -1)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.comboBox = QtWidgets.QComboBox(self.frame)
-        self.comboBox.setMaximumSize(QtCore.QSize(150, 16777215))
-        font = QtGui.QFont()
-        font.setFamily("Segoe UI")
-        self.comboBox.setFont(font)
-        self.comboBox.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.comboBox.setStyleSheet("QComboBox{\n"
-"    background-color: rgb(27, 29, 35);\n"
-"    border-radius: 5px;\n"
-"    border: 2px solid rgb(27, 29, 35);\n"
-"    padding: 5px;\n"
-"    padding-left: 10px;\n"
-"}\n"
-"QComboBox:hover{\n"
-"    border: 2px solid rgb(64, 71, 88);\n"
-"}\n"
-"QComboBox::drop-down {\n"
-"    subcontrol-origin: padding;\n"
-"    subcontrol-position: top right;\n"
-"    width: 25px; \n"
-"    border-left-width: 3px;\n"
-"    border-left-color: rgba(39, 44, 54, 150);\n"
-"    border-left-style: solid;\n"
-"    border-top-right-radius: 3px;\n"
-"    border-bottom-right-radius: 3px;    \n"
-"    background-image: url(:/16x16/icons/16x16/cil-arrow-bottom.png);\n"
-"    background-position: center;\n"
-"    background-repeat: no-reperat;\n"
-" }\n"
-"QComboBox QAbstractItemView {\n"
-"    color: rgb(85, 170, 255);    \n"
-"    background-color: rgb(27, 29, 35);\n"
-"    padding: 10px;\n"
-"    selection-background-color: rgb(39, 44, 54);\n"
-"}")
-        self.comboBox.setObjectName("comboBox")
-        self.verticalLayout_2.addWidget(self.comboBox)
         self.tableViewSchedule = QtWidgets.QTableView(self.frame)
         self.tableViewSchedule.setMinimumSize(QtCore.QSize(930, 0))
         self.tableViewSchedule.setMaximumSize(QtCore.QSize(930, 16777215))
