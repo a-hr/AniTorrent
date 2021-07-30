@@ -36,5 +36,5 @@ anienv/
 .vscode/
 
 # Ui files
-Anitorrent/ui/*.ui
-Anitorrent/ui/*.qrc
+*.ui
+*.qrc
