@@ -5,7 +5,7 @@ from PyQt5.QtCore import QSettings
 class Config:
 
     __slots__ = (
-        'root_folder', 'config_file', 'log_file', 'icon', 'qbittorrent_path',
+        'root_folder', 'config_file', 'log_file', 'backup_file', 'icon', 'qbittorrent_path',
         'download_path', 'postprocess', 'user_label', 'custom_WebUI', 'user_WebUI',
         'pass_WebUI', 'port_WebUI', 'plugins', '__settings')
 
@@ -14,6 +14,7 @@ class Config:
         self.root_folder = Path(__file__).resolve().parent.parent
         self.config_file = str(self.root_folder / 'data' / 'config.ini')
         self.log_file = str(self.root_folder / 'data' / 'log.txt')
+        self.backup_file: Path = self.root_folder / 'data' / '__backup'
         self.icon = str(self.root_folder / 'ui' / 'icons' / 'logo.ico')
 
         self.__settings = QSettings(self.config_file, QSettings.IniFormat)

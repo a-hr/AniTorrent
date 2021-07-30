@@ -15,7 +15,7 @@ class ProgressObserver(QtCore.QObject):
     error = QtCore.pyqtSignal(Exception)
     finished = QtCore.pyqtSignal()
 
-    def __init__(self,  config) -> None:
+    def __init__(self, config) -> None:
         super().__init__()
 
         self.config = config

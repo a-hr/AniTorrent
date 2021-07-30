@@ -1,4 +1,5 @@
 import ctypes
+import pickle
 import sys
 from pathlib import Path
 
@@ -29,8 +30,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         if not Path(f'{self.config.download_path}').exists():
             self.stackedWidget.setCurrentIndex(3)
-            warning = "The provided download path does not exist. Please select a new one."
+            warning = f"""The provided download path ({
+                self.config.download_path}) does not exist. Please select a new one."""
             self.info_box('Warning', warning)
+
+        if (bf := self.config.backup_file).exists():
+            with open(bf, 'rb') as f:
+                if (running_torrents := pickle.load(f)):
+                    self.functions.send_torrents.emit(running_torrents)
+            bf.unlink()
 
     def setup(self):
 
@@ -525,9 +533,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def closeEvent(self, event):
 
         if self.functions.progressThread.running:
-            # TO-DO
-            # pickle self.functions.progressThread.torrents for recover on restart
-            print('Thread still running.')
+            torrent_list = self.functions.progressThread.torrents.copy()
+            with open(self.config.backup_file, 'wb') as f:
+                pickle.dump(torrent_list, f)
         else:
             self.functions.thread.quit()
 

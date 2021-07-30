@@ -31,7 +31,8 @@ class Functions(QtCore.QObject):
                 QModelIndex)
         else:
             selected_series, fansub = table_response
-
+        
+        self.parent.current_fansub = fansub
         SearchEngine = PluginEngine()
         episodes_dicts = SearchEngine.search_episodes(fansub, selected_series)
 
@@ -78,7 +79,9 @@ class Functions(QtCore.QObject):
                     torrent.torrent_hash = response['hash']
 
         time.sleep(0.5)
-        self.timer.start(1500)
+        
+        if not self.timer.isActive():
+            self.timer.start(1500)
 
         return torrents
 
@@ -86,6 +89,7 @@ class Functions(QtCore.QObject):
         self.progressThread = ProgressObserver(self.parent.config)
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.progressThread.update_progress)
+        self.timer.start(1500)
 
         self.thread = QtCore.QThread()
         self.progressThread.moveToThread(self.thread)

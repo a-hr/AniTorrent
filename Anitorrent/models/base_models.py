@@ -25,18 +25,20 @@ class Episode:
 
 class Torrent:
 
-    def __init__(self, episode_obj: Episode, config_object) -> None:
-
-        self.__config = config_object
+    def __init__(self, episode_obj: Episode, __config: object) -> None:
 
         self.status = ''
         self.progress = 0
         self.eta = 0
 
+        self._port_WebUI = __config.port_WebUI
+        self._user_WebUI = __config.user_WebUI
+        self._pass_WebUI = __config.pass_WebUI
+
         self.torrent_hash = ''
         self.magnet = episode_obj.magnet
 
-        self.postprocess = self.__config.postprocess
+        self.postprocess = __config.postprocess
 
         self.parent = episode_obj.series_name.removesuffix('.').strip()
         self.qb_download_path = ''
@@ -46,9 +48,9 @@ class Torrent:
         self.is_folder = True if episode_obj.batch.lower() == 'true' else False
 
         if self.is_folder:
-            self.download_folder = self.__config.download_path
+            self.download_folder = __config.download_path
         else:
-            self.download_folder = f'{self.__config.download_path}/{self.parent}'
+            self.download_folder = f'{__config.download_path}/{self.parent}'
 
         self.tag = f"{self.title[:2]}.{randint(0, 99999999)}"
 
@@ -69,9 +71,9 @@ class Torrent:
     def rename(self):
 
         qbt_client = qbittorrentapi.Client(
-            host=f"localhost:{self.__config.port_WebUI}",
-            username=self.__config.user_WebUI,
-            password=self.__config.pass_WebUI
+            host=f"localhost:{self._port_WebUI}",
+            username=self._user_WebUI,
+            password=self._pass_WebUI
         )
         qbt_client.torrents_delete(
             torrent_hashes=self.torrent_hash,
