@@ -1,5 +1,4 @@
 import ctypes
-import sys
 
 from data import Config
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -37,6 +36,15 @@ class GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setup_menus()
         self.setup_widgets()
         self.setup_settings()
+
+        def moveWindow(event):
+            if event.buttons() == QtCore.Qt.LeftButton:
+                self.move(self.pos() + event.globalPos() - self.dragPos)
+                self.dragPos = event.globalPos()
+                event.accept()
+
+        self.frame_label_top_btns.mouseMoveEvent = moveWindow
+
         self.uiDefinitions()
 
         self.show()
@@ -186,7 +194,7 @@ class GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         button.setStyleSheet(style.replace('ICON_REPLACE', icon))
         button.setText(name)
         button.setToolTip(name)
-        button.clicked.connect(self.Button)
+        button.clicked.connect(self.buttonClickEvent)
 
         if isTopMenu:
             self.layout_menus.addWidget(button)
@@ -246,7 +254,7 @@ class GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         return deselect
 
     @QtCore.pyqtSlot()
-    def Button(self):
+    def buttonClickEvent(self):
         btnWidget = self.sender()
         # PAGE HOME
         if btnWidget.objectName() == "btn_search":
@@ -285,17 +293,4 @@ class GUI(QtWidgets.QMainWindow, Ui_MainWindow):
 
     # <App Events>
     def mousePressEvent(self, event):
-        self.old_pos_x = int(event.screenPos().x())
-        self.old_pos_y = int(event.screenPos().y())
-
-    def mouseMoveEvent(self, event):
-        if self.clicked:
-            dx = self.old_pos_x - int(event.screenPos().x())
-            dy = self.old_pos_y - int(event.screenPos().y())
-            self.move(self.pos().x() - dx, self.pos().y() - dy)
-
-        self.old_pos_x = int(event.screenPos().x())
-        self.old_pos_y = int(event.screenPos().y())
-        self.clicked = True
-
-        return QtWidgets.QMainWindow.mouseMoveEvent(self, event)
+        self.dragPos = event.globalPos()

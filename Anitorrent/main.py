@@ -6,7 +6,7 @@ import psutil
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from data import Config
-from models import (EpisodeTableModel, FilterProxyModel, SearchTableModel)
+from models import EpisodeTableModel, FilterProxyModel, SearchTableModel
 from tools import Functions
 from ui import GUI, AiringToday, ScheduleWindow
 
