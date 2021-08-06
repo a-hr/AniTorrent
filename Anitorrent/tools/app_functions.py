@@ -28,19 +28,19 @@ class Functions(QtCore.QObject):
     def episodes(self, QModelIndex=None, table_response: list = None) -> list[Episode]:
         if QModelIndex:
             selected_series, fansub = self.parent.model_search.return_selected(
-                QModelIndex)
+                QModelIndex
+            )
         else:
             selected_series, fansub = table_response
-        
+
         self.parent.current_fansub = fansub
         SearchEngine = PluginEngine()
         episodes_dicts = SearchEngine.search_episodes(fansub, selected_series)
 
-        # self.clean_duplicates(episodes_dicts)
-        cleaned_results = episodes_dicts
+        cleaned_results = self.clean_duplicates(episodes_dicts)
 
         if len(cleaned_results) == 0:
-            return 'No results found. Episodes not yet available.'
+            return "No results found. Episodes not yet available."
 
         else:
             return cleaned_results
@@ -52,18 +52,20 @@ class Functions(QtCore.QObject):
             client = qbittorrentapi.Client(
                 host=f"localhost:{self.parent.config.port_WebUI}",
                 username=self.parent.config.user_WebUI,
-                password=self.parent.config.pass_WebUI)
+                password=self.parent.config.pass_WebUI,
+            )
             client.app_version()
         except:
             import os
-            os.system(
-                f'cmd /c "start /min "" "{self.parent.config.qbittorrent_path}""')
+
+            os.system(f'cmd /c "start /min "" "{self.parent.config.qbittorrent_path}""')
         finally:
             qbt_client = qbittorrentapi.Client(
                 host=f"localhost:{self.parent.config.port_WebUI}",
                 username=self.parent.config.user_WebUI,
                 password=self.parent.config.pass_WebUI,
-                SIMPLE_RESPONSES=True)
+                SIMPLE_RESPONSES=True,
+            )
 
         for torrent in torrents:
 
@@ -71,18 +73,19 @@ class Functions(QtCore.QObject):
                 urls=torrent.magnet,
                 save_path=torrent.download_folder,
                 tags=torrent.tag,
-                category='anitorrent')
+                category="anitorrent",
+            )
 
         paired_torrents = []
         while torrents:
-            qb_torrents = qbt_client.torrents_info(category='anitorrent')
+            qb_torrents = qbt_client.torrents_info(category="anitorrent")
             for torrent in torrents:
                 for response in qb_torrents:
-                    if response['tags'] == torrent.tag:
-                        torrent.torrent_hash = response['hash']
+                    if response["tags"] == torrent.tag:
+                        torrent.torrent_hash = response["hash"]
                         paired_torrents.append(torrent)
                         torrents.remove(torrent)
-        
+
         if not self.timer.isActive():
             self.timer.start(1500)
 
@@ -98,10 +101,8 @@ class Functions(QtCore.QObject):
         self.progressThread.moveToThread(self.thread)
 
         self.progressThread.update.connect(self.progress_update_handler)
-        self.progressThread.torrent_completed.connect(
-            self.finished_download_handler)
-        self.progressThread.torrent_canceled.connect(
-            self.canceled_download_handler)
+        self.progressThread.torrent_completed.connect(self.finished_download_handler)
+        self.progressThread.torrent_canceled.connect(self.canceled_download_handler)
         self.progressThread.finished.connect(self.endTimer)
 
         self.send_torrents.connect(self.progressThread.startTimer)
@@ -123,39 +124,39 @@ class Functions(QtCore.QObject):
         worker = Worker(torrent.rename, torrent)
         worker.signals.finished.connect(self.rename_completed)
         worker.signals.error.connect(
-            lambda error_t: self.parent.info_box('Error', str(error_t[-1])))
+            lambda error_t: self.parent.info_box("Error", str(error_t[-1]))
+        )
         self.parent.threadpool.start(worker)
 
     @QtCore.pyqtSlot(object)
     def canceled_download_handler(self, torrent: Torrent):
-        self.parent.info_box(
-            'Download canceled', f'{torrent.title} was canceled!')
+        self.parent.info_box("Download canceled", f"{torrent.title} was canceled!")
 
     @QtCore.pyqtSlot(object)
     def rename_completed(self, torrent: Torrent):
         self.post_processing -= 1
-        self.parent.info_box(
-            'Completed', f'{torrent.title} was correctly downloaded!')
+        self.parent.info_box("Completed", f"{torrent.title} was correctly downloaded!")
 
     # </Slots>
     @staticmethod
     def clean_duplicates(results: list[dict]) -> list[dict]:
 
-        clean_results = []
+        length, clean_results = len(results), []
 
-        length = len(results)
+        def _is_dp(index):
+            return all((
+                results[index].title == results[index + 1].title,
+                results[index].quality == results[index + 1].quality,
+            ))
 
         if length == 1:
-            clean_results = results
+            return results
 
         elif length > 1:
-
-            for index in range(length - 1):
-
-                if results[index]['title'] != results[index + 1]['title'] or results[index]['quality'] != results[index + 1]['quality']:
-
-                    clean_results.append(results[index])
-
+            clean_results = [
+                results[index] for index in range(length - 1) if not _is_dp(index)
+            ]
             clean_results.append(results[-1])
+            return clean_results
 
-        return clean_results
+        return []

@@ -12,25 +12,24 @@ from ui import GUI, AiringToday, ScheduleWindow
 
 
 class MainWindow(GUI):
-
     def __init__(self):
         super().__init__()
         self.setupUi(self)
         self.functions = Functions(self)
         self.setup()
-        self.label_user_icon.setText('アニメ')
-        self.label_user_icon.setFont(QtGui.QFont(u"Segoe UI", 17))
-        self.label_top_info_1.setFont(QtGui.QFont(u"Segoe UI", 10, 6))
+        self.label_user_icon.setText("アニメ")
+        self.label_user_icon.setFont(QtGui.QFont("Segoe UI", 17))
+        self.label_top_info_1.setFont(QtGui.QFont("Segoe UI", 10, 6))
 
-        if not Path(f'{self.config.download_path}').exists():
+        if not Path(f"{self.config.download_path}").exists():
             self.stackedWidget.setCurrentIndex(3)
             warning = f"""The provided download path ({
                 self.config.download_path}) does not exist. Please select a new one."""
-            self.info_box('Warning', warning)
+            self.info_box("Warning", warning)
 
         if (bf := self.config.backup_file).exists():
-            with open(bf, 'rb') as f:
-                if (running_torrents := pickle.load(f)):
+            with open(bf, "rb") as f:
+                if running_torrents := pickle.load(f):
                     self.functions.send_torrents.emit(running_torrents)
             bf.unlink()
 
@@ -48,8 +47,8 @@ class MainWindow(GUI):
 
         if not "qbittorrent.exe" in (p.name() for p in psutil.process_iter()):
             import os
-            os.system(
-                f'cmd /c "start /min "" "{self.config.qbittorrent_path}""')
+
+            os.system(f'cmd /c "start /min "" "{self.config.qbittorrent_path}""')
 
         # <Connections>
         self.button_airingtoday.clicked.connect(self.airingToday)
@@ -58,22 +57,22 @@ class MainWindow(GUI):
         self.line_search.returnPressed.connect(self.search)
         self.button_search.clicked.connect(self.search)
 
-        self.tableView_search.clicked.connect(
-            lambda parent: self.load_childs(parent))
+        self.tableView_search.clicked.connect(lambda parent: self.load_childs(parent))
 
-        self.pushButton_filter.clicked.connect(
-            lambda: self.filter_results(reset=False))
+        self.pushButton_filter.clicked.connect(lambda: self.filter_results(reset=False))
         self.pushButton_resetfilter.clicked.connect(
-            lambda: self.filter_results(reset=True))
+            lambda: self.filter_results(reset=True)
+        )
 
         self.pushButton_download.clicked.connect(self.download)
 
-        self.pushButton_change_settings.clicked.connect(
-            self.save_settings_reload)
+        self.pushButton_change_settings.clicked.connect(self.save_settings_reload)
         self.pushButton_download_path.clicked.connect(
-            lambda: self.select_file_dir(select='download_dir'))
+            lambda: self.select_file_dir(select="download_dir")
+        )
         self.pushButton_qB_path.clicked.connect(
-            lambda: self.select_file_dir(select='qbt_path'))
+            lambda: self.select_file_dir(select="qbt_path")
+        )
 
     # <Helpers>
     def info_box(self, title, message):
@@ -102,10 +101,12 @@ class MainWindow(GUI):
                 QProgressBar::chunk {
                     background-color: rgb(85, 170, 255);
                     border-radius: 1px;
-                } """)
+                } """
+            )
 
             eta = QtWidgets.QTableWidgetItem(
-                f'{int(torrent.eta/60)}m' if torrent.eta > 60 else f'{torrent.eta}s')
+                f"{int(torrent.eta/60)}m" if torrent.eta > 60 else f"{torrent.eta}s"
+            )
 
             self.tableWidget_downloads.setItem(row, 0, title)
             self.tableWidget_downloads.setCellWidget(row, 1, pb)
@@ -115,17 +116,19 @@ class MainWindow(GUI):
 
         reply = QtWidgets.QMessageBox.question(
             self,
-            'Change settings',
+            "Change settings",
             """Settings will be saved and app reloaded.
                 \nAre you sure you want to proceed?""",
             QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
-            QtWidgets.QMessageBox.No)
+            QtWidgets.QMessageBox.No,
+        )
 
         if reply == QtWidgets.QMessageBox.Yes:
 
             val_folders = (
                 self.lineEdit_qB_path.text(),
-                self.lineEdit_download_path.text())
+                self.lineEdit_download_path.text(),
+            )
 
             val_settings = (
                 not self.checkBox_cancel_postprocessing.isChecked(),
@@ -133,16 +136,15 @@ class MainWindow(GUI):
                 self.checkBox_custom_WebUi.isChecked(),
                 self.lineEdit_WebUi_user.text(),
                 self.lineEdit_WebUi_pass.text(),
-                self.lineEdit_WebUi_port.text())
+                self.lineEdit_WebUi_port.text(),
+            )
 
-            self.config.save_changes(
-                val_folders=val_folders,
-                val_settings=val_settings)
+            self.config.save_changes(val_folders=val_folders, val_settings=val_settings)
 
-            self.info_box('Completed', 'Settings were updated.')
+            self.info_box("Completed", "Settings were updated.")
 
         else:
-            self.info_box('Canceled', 'No changes were made.')
+            self.info_box("Canceled", "No changes were made.")
 
     # <Main Methods>
     @QtCore.pyqtSlot()
@@ -156,7 +158,7 @@ class MainWindow(GUI):
             self.tableView_search.setModel(self.model_search)
             self.tableView_search.resizeColumnsToContents()
         else:
-            self.info_box('Empty query', results)
+            self.info_box("Empty query", results)
 
     @QtCore.pyqtSlot(QtCore.QModelIndex)
     def load_childs(self, parent) -> None:
@@ -170,13 +172,12 @@ class MainWindow(GUI):
 
             header = self.tableView_episodes.horizontalHeader()
             header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
-            header.setSectionResizeMode(
-                3, QtWidgets.QHeaderView.ResizeToContents)
+            header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
 
             self.stackedWidget.setCurrentIndex(1)
             self.swapMenus("btn_results")
         else:
-            self.info_box('Empty query', result)
+            self.info_box("Empty query", result)
 
     @QtCore.pyqtSlot(bool)
     def download(self, *args) -> None:
@@ -195,19 +196,17 @@ class MainWindow(GUI):
     @QtCore.pyqtSlot()
     def select_file_dir(self, select: str) -> None:
 
-        if select == 'download_dir':
+        if select == "download_dir":
             dir = QtWidgets.QFileDialog.getExistingDirectory(
-                self,
-                'Select folder',
-                options=QtWidgets.QFileDialog.ShowDirsOnly)
+                self, "Select folder", options=QtWidgets.QFileDialog.ShowDirsOnly
+            )
 
             self.lineEdit_download_path.setText(dir)
 
-        elif select == 'qbt_path':
+        elif select == "qbt_path":
             file = QtWidgets.QFileDialog.getOpenFileName(
-                self,
-                'Select file',
-                'C:\Program Files\qBittorrent')
+                self, "Select file", "C:\Program Files\qBittorrent"
+            )
 
             self.lineEdit_qB_path.setText(file[0])
 
@@ -217,9 +216,12 @@ class MainWindow(GUI):
         self.episodes_proxymodel.clearFilters()
 
         if not reset:
-            filter_quality = self.comboBox_quality.currentText(
-            ) if self.comboBox_quality.currentIndex() > 0 else ''
-            filter_batch = 'True' if self.checkBox_batch.isChecked() else ''
+            filter_quality = (
+                self.comboBox_quality.currentText()
+                if self.comboBox_quality.currentIndex() > 0
+                else ""
+            )
+            filter_batch = "True" if self.checkBox_batch.isChecked() else ""
 
             self.episodes_proxymodel.setFilterByColumn(1, filter_quality)
             self.episodes_proxymodel.setFilterByColumn(2, filter_batch)
@@ -229,14 +231,16 @@ class MainWindow(GUI):
         self.airingTodayWindow = AiringToday()
         self.airingTodayWindow.show()
         self.airingTodayWindow.search_title.connect(
-            lambda text: self.line_search.setText(text))
+            lambda text: self.line_search.setText(text)
+        )
 
     @QtCore.pyqtSlot()
     def schedule(self):
         self.scheduleWindow = ScheduleWindow()
         self.scheduleWindow.show()
         self.scheduleWindow.search_title.connect(
-            lambda text: self.line_search.setText(text))
+            lambda text: self.line_search.setText(text)
+        )
 
     @QtCore.pyqtSlot()
     def save_settings_reload(self):
@@ -248,7 +252,7 @@ class MainWindow(GUI):
 
         if self.functions.progressThread.running:
             torrent_list = self.functions.progressThread.torrents.copy()
-            with open(self.config.backup_file, 'wb') as f:
+            with open(self.config.backup_file, "wb") as f:
                 pickle.dump(torrent_list, f)
         else:
             self.functions.thread.quit()
@@ -257,11 +261,12 @@ class MainWindow(GUI):
 
             reply = QtWidgets.QMessageBox.question(
                 self,
-                'Quit',
+                "Quit",
                 """A file is still being processed (<30s left)
                 \nAre you sure you want to quit?""",
                 QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
-                QtWidgets.QMessageBox.No)
+                QtWidgets.QMessageBox.No,
+            )
 
             if reply == QtWidgets.QMessageBox.Yes:
                 event.accept()
@@ -271,11 +276,11 @@ class MainWindow(GUI):
 
 def launch():
     app = QtWidgets.QApplication(sys.argv)
-    QtGui.QFontDatabase.addApplicationFont('ui/fonts/segoeui.ttf')
-    QtGui.QFontDatabase.addApplicationFont('ui/fonts/segoeuib.ttf')
+    QtGui.QFontDatabase.addApplicationFont("ui/fonts/segoeui.ttf")
+    QtGui.QFontDatabase.addApplicationFont("ui/fonts/segoeuib.ttf")
     window = MainWindow()
     sys.exit(app.exec_())
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     launch()
