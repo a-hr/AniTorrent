@@ -18,6 +18,9 @@ class MainWindow(GUI):
         self.setupUi(self)
         self.functions = Functions(self)
         self.setup()
+        self.label_user_icon.setText('アニメ')
+        self.label_user_icon.setFont(QtGui.QFont(u"Segoe UI", 17))
+        self.label_top_info_1.setFont(QtGui.QFont(u"Segoe UI", 10, 6))
 
         if not Path(f'{self.config.download_path}').exists():
             self.stackedWidget.setCurrentIndex(3)

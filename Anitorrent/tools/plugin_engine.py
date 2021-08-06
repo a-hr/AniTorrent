@@ -24,6 +24,16 @@ class PluginEngine:
 
     @lru_cache()
     def update_schedule(self, today: bool = False) -> list[list]:
+        """Generates a schedule containing airing anime. Series are 
+        ordered based on MAL rating on the weekly schedule, and based 
+        on airing time on the daily schedule.
+
+        Args:
+            today (bool, optional): Whether to retrieve weekly or dauly schedule. Defaults to False.
+
+        Returns:
+            list[list]: Contains a list for each week day, with AiringAnime objects on them.
+        """
         r = requests.get(
             f'https://api.jikan.moe/v3/season/').json()['anime']
 

@@ -30,7 +30,7 @@ class GUI(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.label_title_bar_top.setText('AniTorrent')
         self.label_credits.setText('Developed by: Kajiya_aru')
-        self.label_version.setText('v1.0.0')
+        self.label_version.setText('v1.1.0')
 
     def ui_init(self):
         self.setup_menus()
@@ -124,9 +124,6 @@ class GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lineEdit_WebUi_pass.setText(self.config.pass_WebUI)
         self.lineEdit_WebUi_port.setText(str(self.config.port_WebUI))
         self.toggleWebUIState(self.checkBox_custom_WebUi.isChecked())
-
-        self.lineEdit_username.setText(self.config.user_label)
-        self.label_user_icon.setText(self.config.user_label)
 
     def toggleWebUIState(self, flag):
         self.lineEdit_WebUi_user.setEnabled(flag)

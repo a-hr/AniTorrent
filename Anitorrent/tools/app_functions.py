@@ -73,12 +73,15 @@ class Functions(QtCore.QObject):
                 tags=torrent.tag,
                 category='anitorrent')
 
+        time.sleep(0.5)
+        # TODO: check until all torrents have found their hashes
+
         for response in qbt_client.torrents_info(category='anitorrent'):
             for torrent in torrents:
                 if response['tags'] == torrent.tag:
                     torrent.torrent_hash = response['hash']
 
-        time.sleep(0.5)
+        time.sleep(0.3)
         
         if not self.timer.isActive():
             self.timer.start(1500)
