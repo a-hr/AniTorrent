@@ -81,14 +81,17 @@ class SubsPlease:
                 magnet_link=magnet_link,
             )
         else:
-            parent, ep, quality = re.findall(
-                "(.*?).-.([0-9\.]*).\(([0-9]*p)\)", clean_text
+            parent, ep, _altep, quality = re.findall(
+                "(.*).-.([0-9\.]*)(.*)\(([0-9]*p)\)", clean_text
             )[0]
-
-            try:
-                ep = int(ep)
-            except ValueError:
-                ep = float(ep)
+            
+            if not ep:
+                ep = _altep
+            else:
+                try:
+                    ep = int(ep)
+                except ValueError:
+                    ep = float(ep)
 
             return Episode(
                 title=f"{parent} - {ep}",
