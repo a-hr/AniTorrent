@@ -1,4 +1,5 @@
 import ctypes
+import webbrowser
 
 from data import Config
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -8,31 +9,30 @@ from .widgets import CheckableComboBox
 
 
 class GUI(QtWidgets.QMainWindow, Ui_MainWindow):
-
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
         self.setupUi(self)
 
+    def ui_init(self):
         self.clicked = False
         self.config = Config()
 
         # <GUI Properties>
         self.setWindowIcon(QtGui.QIcon(self.config.icon))
-        myappid = u'Kajiya_aru.AniTorrent.v1_0_0'
+        myappid = u"Kajiya_aru.AniTorrent.v1_0_5"
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
-        self.setWindowTitle('AniTorrent')
+        self.setWindowTitle("AniTorrent")
 
         startSize = QtCore.QSize(1000, 720)
         self.setFixedSize(startSize)
 
-        self.label_title_bar_top.setText('AniTorrent')
-        self.label_credits.setText('Developed by: Kajiya_aru')
-        self.label_version.setText('v1.1.0')
+        self.label_title_bar_top.setText("AniTorrent")
+        self.label_credits.setText("Developed by: Kajiya_aru")
+        self.label_version.setText("v1.0.5")
 
-    def ui_init(self):
         self.setup_menus()
         self.setup_widgets()
         self.setup_settings()
@@ -51,33 +51,37 @@ class GUI(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def setup_menus(self):
 
-        self.btn_toggle_menu.clicked.connect(
-            lambda: self.toggleMenu(220, True))
+        self.btn_toggle_menu.clicked.connect(lambda: self.toggleMenu(220, True))
 
         self.stackedWidget.setMinimumWidth(20)
         self.addNewMenu(
             "Search",
             "btn_search",
-            "url(:/16x16/icons/16x16/cil-magnifying-glass.png)", True)
+            "url(:/16x16/icons/16x16/cil-magnifying-glass.png)",
+            True,
+        )
         self.addNewMenu(
-            "Results", "btn_results",
-            "url(:/16x16/icons/16x16/cil-browser.png)", True)
+            "Results", "btn_results", "url(:/16x16/icons/16x16/cil-browser.png)", True
+        )
         self.addNewMenu(
             "Downloads",
             "btn_downloads",
-            "url(:/16x16/icons/16x16/cil-data-transfer-down.png)", True)
+            "url(:/16x16/icons/16x16/cil-data-transfer-down.png)",
+            True,
+        )
         self.addNewMenu(
             "Settings",
             "btn_settings",
-            "url(:/16x16/icons/16x16/cil-settings.png)", False)
+            "url(:/16x16/icons/16x16/cil-settings.png)",
+            False,
+        )
         self.addNewMenu(
-            "About",
-            "btn_about",
-            "url(:/16x16/icons/16x16/cil-people.png)", False)
+            "About", "btn_about", "url(:/16x16/icons/16x16/cil-people.png)", False
+        )
 
         self.selectStandardMenu("btn_search")
         self.stackedWidget.setCurrentWidget(self.page_home)
-        self.labelPage('SEARCH')
+        self.labelPage("SEARCH")
 
     def setup_widgets(self):
 
@@ -87,7 +91,8 @@ class GUI(QtWidgets.QMainWindow, Ui_MainWindow):
             self.combobox_fansubs.setItemChecked(index, checked=fansub[1])
 
         self.verticalLayout_10.replaceWidget(
-            self.combobox_source, self.combobox_fansubs)
+            self.combobox_source, self.combobox_fansubs
+        )
         self.combobox_source.close()
 
         self.tableView_search.verticalHeader().setVisible(False)
@@ -96,16 +101,28 @@ class GUI(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.tableWidget_downloads.setColumnCount(3)
         self.tableWidget_downloads.setEditTriggers(
-            QtWidgets.QAbstractItemView.NoEditTriggers)
+            QtWidgets.QAbstractItemView.NoEditTriggers
+        )
         self.tableWidget_downloads.horizontalHeader().setDefaultAlignment(
-            QtCore.Qt.AlignCenter)
-        self.tableWidget_downloads.setHorizontalHeaderLabels((
-            "Name", "Progress", "Remaining"))
+            QtCore.Qt.AlignCenter
+        )
+        self.tableWidget_downloads.setHorizontalHeaderLabels(
+            ("Name", "Progress", "Remaining")
+        )
 
         header = self.tableWidget_downloads.horizontalHeader()
         header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
         header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
         header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
+
+        with open(self.config.about_md, "r") as ab:
+            self.textEdit_About.setHtml(ab.read())
+            self.textEdit_About.setEnabled(True)
+            self.textEdit_About.setReadOnly(True)
+
+        self.button_GitHub.clicked.connect(
+            lambda: webbrowser.open("https://github.com/Kajiya-aru/anitorrent")
+        )
 
     def setup_settings(self):
 
@@ -113,12 +130,15 @@ class GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lineEdit_download_path.setText(self.config.download_path)
 
         self.checkBox_cancel_postprocessing.setCheckState(
-            QtCore.Qt.Unchecked if self.config.postprocess else QtCore.Qt.Checked)
+            QtCore.Qt.Unchecked if self.config.postprocess else QtCore.Qt.Checked
+        )
 
         self.checkBox_custom_WebUi.setCheckState(
-            QtCore.Qt.Checked if self.config.custom_WebUI else QtCore.Qt.Unchecked)
+            QtCore.Qt.Checked if self.config.custom_WebUI else QtCore.Qt.Unchecked
+        )
         self.checkBox_custom_WebUi.stateChanged.connect(
-            lambda: self.toggleWebUIState(self.checkBox_custom_WebUi.isChecked()))
+            lambda: self.toggleWebUIState(self.checkBox_custom_WebUi.isChecked())
+        )
 
         self.lineEdit_WebUi_user.setText(self.config.user_WebUI)
         self.lineEdit_WebUi_pass.setText(self.config.pass_WebUI)
@@ -177,10 +197,11 @@ class GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         """
         font = QtGui.QFont()
         font.setFamily(u"Segoe UI")
-        button = QtWidgets.QPushButton('1', self)
+        button = QtWidgets.QPushButton("1", self)
         button.setObjectName(objName)
         sizePolicy3 = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy3.setHorizontalStretch(0)
         sizePolicy3.setVerticalStretch(0)
         sizePolicy3.setHeightForWidth(button.sizePolicy().hasHeightForWidth())
@@ -188,7 +209,7 @@ class GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         button.setMinimumSize(QtCore.QSize(0, 70))
         button.setLayoutDirection(QtCore.Qt.LeftToRight)
         button.setFont(font)
-        button.setStyleSheet(style.replace('ICON_REPLACE', icon))
+        button.setStyleSheet(style.replace("ICON_REPLACE", icon))
         button.setText(name)
         button.setToolTip(name)
         button.clicked.connect(self.buttonClickEvent)
@@ -210,7 +231,8 @@ class GUI(QtWidgets.QMainWindow, Ui_MainWindow):
                 widthExtended = standard
 
             self.animation = QtCore.QPropertyAnimation(
-                self.frame_left_menu, b"minimumWidth")
+                self.frame_left_menu, b"minimumWidth"
+            )
             self.animation.setDuration(300)
             self.animation.setStartValue(width)
             self.animation.setEndValue(widthExtended)
@@ -235,19 +257,19 @@ class GUI(QtWidgets.QMainWindow, Ui_MainWindow):
                 w.setStyleSheet(self.selectMenu(w.styleSheet()))
 
     def labelPage(self, text):
-        newText = '| ' + text.upper()
+        newText = "| " + text.upper()
         self.label_top_info_2.setText(newText)
 
     @staticmethod
     def selectMenu(getStyle):
-        select = getStyle + (
-            "QPushButton { border-right: 7px solid rgb(44, 49, 60); }")
+        select = getStyle + ("QPushButton { border-right: 7px solid rgb(44, 49, 60); }")
         return select
 
     @staticmethod
     def deselectMenu(getStyle):
         deselect = getStyle.replace(
-            "QPushButton { border-right: 7px solid rgb(44, 49, 60); }", "")
+            "QPushButton { border-right: 7px solid rgb(44, 49, 60); }", ""
+        )
         return deselect
 
     @QtCore.pyqtSlot()

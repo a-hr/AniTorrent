@@ -475,7 +475,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.frame_top_btns = QtWidgets.QFrame(self.frame_top_right)
         self.frame_top_btns.setMaximumSize(QtCore.QSize(16777215, 42))
-        self.frame_top_btns.setStyleSheet("background-color: rgba(27, 29, 35, 200)")
+        self.frame_top_btns.setStyleSheet("background-color: rgb(27, 29, 35)")
         self.frame_top_btns.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.frame_top_btns.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_top_btns.setObjectName("frame_top_btns")
@@ -589,6 +589,7 @@ class Ui_MainWindow(object):
         font.setFamily("Segoe UI")
         self.label_top_info_1.setFont(font)
         self.label_top_info_1.setStyleSheet("color: rgb(98, 103, 111); ")
+        self.label_top_info_1.setText("")
         self.label_top_info_1.setObjectName("label_top_info_1")
         self.horizontalLayout_8.addWidget(self.label_top_info_1)
         self.label_top_info_2 = QtWidgets.QLabel(self.frame_top_info)
@@ -676,6 +677,7 @@ class Ui_MainWindow(object):
 "border: 5px solid rgb(39, 44, 54);\n"
 "background-position: center;\n"
 "background-repeat: no-repeat;")
+        self.label_user_icon.setText("")
         self.label_user_icon.setAlignment(QtCore.Qt.AlignCenter)
         self.label_user_icon.setObjectName("label_user_icon")
         self.layout_menu_bottom.addWidget(self.label_user_icon, 0, QtCore.Qt.AlignHCenter)
@@ -1679,6 +1681,12 @@ class Ui_MainWindow(object):
         self.textEdit_About = QtWidgets.QTextEdit(self.frame_6)
         self.textEdit_About.setEnabled(False)
         self.textEdit_About.setGeometry(QtCore.QRect(30, 20, 771, 391))
+        font = QtGui.QFont()
+        font.setFamily("Segoe UI")
+        self.textEdit_About.setFont(font)
+        self.textEdit_About.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.textEdit_About.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
+        self.textEdit_About.setReadOnly(True)
         self.textEdit_About.setObjectName("textEdit_About")
         self.button_GitHub = QtWidgets.QCommandLinkButton(self.frame_6)
         self.button_GitHub.setGeometry(QtCore.QRect(20, 450, 131, 50))
@@ -1767,9 +1775,7 @@ class Ui_MainWindow(object):
         self.label_title_bar_top.setText(_translate("MainWindow", "AniTorrent"))
         self.btn_minimize.setToolTip(_translate("MainWindow", "Minimize"))
         self.btn_close.setToolTip(_translate("MainWindow", "Close"))
-        self.label_top_info_1.setText(_translate("MainWindow", "アニトーレントへようこそ～"))
         self.label_top_info_2.setText(_translate("MainWindow", "| Current page"))
-        self.label_user_icon.setText(_translate("MainWindow", "KJ"))
         self.label.setText(_translate("MainWindow", "Search for series"))
         self.line_search.setPlaceholderText(_translate("MainWindow", "Input series name"))
         self.button_search.setText(_translate("MainWindow", "Search"))
@@ -1790,7 +1796,7 @@ class Ui_MainWindow(object):
         self.pushButton_download.setText(_translate("MainWindow", "Download"))
         self.label_3.setText(_translate("MainWindow", "Downloading"))
         self.tableWidget_downloads.setSortingEnabled(True)
-        self.labelBoxBlenderInstalation.setText(_translate("MainWindow", "アニトーレントへようこそ～"))
+        self.labelBoxBlenderInstalation.setText(_translate("MainWindow", "Download Folder"))
         self.lineEdit_download_path.setPlaceholderText(_translate("MainWindow", "New Path"))
         self.labelVersion_3.setText(_translate("MainWindow", "Ex: C:\\ Desktop\\ Series\\ Anime"))
         self.pushButton_download_path.setText(_translate("MainWindow", "Open Folders"))
@@ -1804,13 +1810,8 @@ class Ui_MainWindow(object):
         self.lineEdit_WebUi_pass.setPlaceholderText(_translate("MainWindow", "WebUI Password"))
         self.lineEdit_WebUi_port.setPlaceholderText(_translate("MainWindow", "WebUI Port"))
         self.pushButton_change_settings.setText(_translate("MainWindow", "Save Changes"))
-        self.textEdit_About.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
         self.button_GitHub.setText(_translate("MainWindow", "GitHub"))
         self.button_GitHub.setDescription(_translate("MainWindow", "Open Link"))
         self.label_credits.setText(_translate("MainWindow", "Developed by: kajiya_aru"))
-        self.label_version.setText(_translate("MainWindow", "v1.0.0"))
+        self.label_version.setText(_translate("MainWindow", "v1.0.5"))
 from . import files_rc

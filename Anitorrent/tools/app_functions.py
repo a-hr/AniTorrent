@@ -1,5 +1,3 @@
-import time
-
 import qbittorrentapi
 from models import Episode, Torrent
 from PyQt5 import QtCore

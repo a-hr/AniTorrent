@@ -132,7 +132,6 @@ class MainWindow(GUI):
 
             val_settings = (
                 not self.checkBox_cancel_postprocessing.isChecked(),
-                self.lineEdit_username.text(),
                 self.checkBox_custom_WebUi.isChecked(),
                 self.lineEdit_WebUi_user.text(),
                 self.lineEdit_WebUi_pass.text(),
@@ -228,7 +227,7 @@ class MainWindow(GUI):
 
     @QtCore.pyqtSlot()
     def airingToday(self):
-        self.airingTodayWindow = AiringToday()
+        self.airingTodayWindow = AiringToday(self.config)
         self.airingTodayWindow.show()
         self.airingTodayWindow.search_title.connect(
             lambda text: self.line_search.setText(text)
@@ -236,7 +235,7 @@ class MainWindow(GUI):
 
     @QtCore.pyqtSlot()
     def schedule(self):
-        self.scheduleWindow = ScheduleWindow()
+        self.scheduleWindow = ScheduleWindow(self.config)
         self.scheduleWindow.show()
         self.scheduleWindow.search_title.connect(
             lambda text: self.line_search.setText(text)

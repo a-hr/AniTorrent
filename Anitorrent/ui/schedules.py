@@ -10,13 +10,14 @@ class ScheduleWindow(QtWidgets.QWidget, Ui_Schedule):
 
     search_title = QtCore.pyqtSignal(str)
 
-    def __init__(self):
+    def __init__(self, config: object):
         QtWidgets.QWidget.__init__(self)
         self.setupUi(self)
 
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         self.engine = PluginEngine()
+        self.__config = config
 
         # <Load GUI properties>
         self.clicked = False
@@ -30,7 +31,7 @@ class ScheduleWindow(QtWidgets.QWidget, Ui_Schedule):
         self.populate_table()
 
     def populate_table(self):
-        data = self.engine.update_schedule()
+        data = self.engine.update_schedule(self.__config)
         self.model = ScheduleTableModel(data)
         self.tableViewSchedule.setModel(self.model)
 
@@ -66,13 +67,14 @@ class AiringToday(QtWidgets.QWidget, Ui_AiringToday):
 
     search_title = QtCore.pyqtSignal(str)
 
-    def __init__(self):
+    def __init__(self, config: object):
         QtWidgets.QWidget.__init__(self)
         self.setupUi(self)
 
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         self.engine = PluginEngine()
+        self.__config = config
 
         # <Load GUI properties>
         self.clicked = False
@@ -98,7 +100,7 @@ class AiringToday(QtWidgets.QWidget, Ui_AiringToday):
 
     def populate_table(self):
         self.setupTable()
-        data = self.engine.update_schedule(today=True)
+        data = self.engine.update_schedule(self.__config, today=True)
 
         def item(d: AiringAnime):
             title = QtGui.QStandardItem(d.title)
