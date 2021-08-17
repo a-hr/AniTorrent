@@ -116,8 +116,7 @@ class GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
 
         with open(self.config.about_md, "r") as ab:
-            self.textEdit_About.setHtml(ab.read())
-            self.textEdit_About.setEnabled(True)
+            self.textEdit_About.setMarkdown(ab.read())
             self.textEdit_About.setReadOnly(True)
 
         self.button_GitHub.clicked.connect(

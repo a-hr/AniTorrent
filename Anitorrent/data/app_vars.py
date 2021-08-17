@@ -15,7 +15,6 @@ class Config:
         "qbittorrent_path",
         "download_path",
         "postprocess",
-        "user_label",
         "custom_WebUI",
         "user_WebUI",
         "pass_WebUI",
@@ -50,7 +49,6 @@ class Config:
         self.__settings.beginGroup("Settings")
 
         self.postprocess = self.__settings.value("postprocess", type=bool)
-        self.user_label = self.__settings.value("userLabel")
         self.custom_WebUI = self.__settings.value("WebUIkeys", type=bool)
         self.user_WebUI = self.__settings.value("user")
         self.pass_WebUI = self.__settings.value("pass")
@@ -89,7 +87,7 @@ class Config:
 
         # <Settings>
         self.__settings.beginGroup("Settings")
-        opt_array = ("postprocess", "userLabel", "WebUIkeys", "user", "pass", "port")
+        opt_array = ("postprocess", "WebUIkeys", "user", "pass", "port")
 
         [
             self.__settings.setValue(opt, val)
