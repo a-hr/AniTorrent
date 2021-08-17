@@ -1670,26 +1670,24 @@ class Ui_MainWindow(object):
         self.stackedWidget.addWidget(self.page_widgets)
         self.page_about = QtWidgets.QWidget()
         self.page_about.setObjectName("page_about")
+        self.verticalLayout_18 = QtWidgets.QVBoxLayout(self.page_about)
+        self.verticalLayout_18.setObjectName("verticalLayout_18")
         self.frame_6 = QtWidgets.QFrame(self.page_about)
-        self.frame_6.setGeometry(QtCore.QRect(30, 30, 831, 520))
         self.frame_6.setStyleSheet("background-color: rgb(39, 44, 54);\n"
 "padding: 10px;\n"
 "border-radius: 5px;")
         self.frame_6.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_6.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_6.setObjectName("frame_6")
+        self.verticalLayout_19 = QtWidgets.QVBoxLayout(self.frame_6)
+        self.verticalLayout_19.setObjectName("verticalLayout_19")
         self.textEdit_About = QtWidgets.QTextEdit(self.frame_6)
-        self.textEdit_About.setEnabled(False)
-        self.textEdit_About.setGeometry(QtCore.QRect(30, 20, 771, 391))
-        font = QtGui.QFont()
-        font.setFamily("Segoe UI")
-        self.textEdit_About.setFont(font)
-        self.textEdit_About.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.textEdit_About.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
-        self.textEdit_About.setReadOnly(True)
+        self.textEdit_About.setStyleSheet("background-color: rgb(33, 37, 43);\n"
+"font-size: 12pt;")
+        self.textEdit_About.setMarkdown("")
         self.textEdit_About.setObjectName("textEdit_About")
+        self.verticalLayout_19.addWidget(self.textEdit_About)
         self.button_GitHub = QtWidgets.QCommandLinkButton(self.frame_6)
-        self.button_GitHub.setGeometry(QtCore.QRect(20, 450, 131, 50))
         self.button_GitHub.setStyleSheet("QCommandLinkButton {    \n"
 "    color: rgb(85, 170, 255);\n"
 "    border-radius: 5px;\n"
@@ -1707,6 +1705,8 @@ class Ui_MainWindow(object):
         icon9.addPixmap(QtGui.QPixmap(":/logos/icons/GitHub-Mark-Light-32px.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.button_GitHub.setIcon(icon9)
         self.button_GitHub.setObjectName("button_GitHub")
+        self.verticalLayout_19.addWidget(self.button_GitHub, 0, QtCore.Qt.AlignHCenter)
+        self.verticalLayout_18.addWidget(self.frame_6)
         self.stackedWidget.addWidget(self.page_about)
         self.verticalLayout_9.addWidget(self.stackedWidget)
         self.verticalLayout_4.addWidget(self.frame_content)
@@ -1810,6 +1810,11 @@ class Ui_MainWindow(object):
         self.lineEdit_WebUi_pass.setPlaceholderText(_translate("MainWindow", "WebUI Password"))
         self.lineEdit_WebUi_port.setPlaceholderText(_translate("MainWindow", "WebUI Port"))
         self.pushButton_change_settings.setText(_translate("MainWindow", "Save Changes"))
+        self.textEdit_About.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:15pt; font-weight:400; font-style:normal;\" bgcolor=\"transparent\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Segoe UI\'; font-size:10pt;\"><br /></p></body></html>"))
         self.button_GitHub.setText(_translate("MainWindow", "GitHub"))
         self.button_GitHub.setDescription(_translate("MainWindow", "Open Link"))
         self.label_credits.setText(_translate("MainWindow", "Developed by: kajiya_aru"))

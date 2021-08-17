@@ -1,35 +1,40 @@
-<h2 id="about-anitorrent">About AniTorrent</h2>
-<p>This app has been developed by <strong>kajiya_aru</strong> with the sole purpose of replacing the poor search and indexing system of Nyaa.si, and there is no profit-seeking behind it. All of the material available on AniTorrent is externally hosted and I do not own nor make any profit off it.  </p>
-<p>Updates will keep coming, but any kind of help/sponsor will be appreciated as mantaining the app takes time and effort. If you like AniTorrent, don&#39;t hesitate to help me or give me a <strong>star</strong> on my GitHub page.</p>
-<h2 id="usage">Usage</h2>
-<p>Using AniTorrent is really straight and easy:</p>
-<ul>
-<li>On the main page, select the sources you want to search on (more on this on AVAILABLE SOURCES) and enter the name.</li>
-<li>Once selected the show and source, a new page will pop up containing all the available episodes and/or specials with extra info. You can filter by quality of the shows.</li>
-<li>After selecting the episodes to download, press the <em>Download</em> button and the torrents will be automaticcally mmanaged and renamed by the app.</li>
-<li>If you wish to mantain the torrent active after the download, select &quot;Cancel Postprocessing&quot; on the Configuration.</li>
-</ul>
-<h2 id="schedules">Schedules</h2>
-<p>Schedules for airing anime are provided.</p>
-<ul>
-<li>On the Airing Today window, shows and airing time are provided.</li>
-<li>On the weekly schedule, shows are ordered based on their MyAnimeList rating.  </li>
-</ul>
-<p>Clicking on any show will autocomplete the Search Bar.</p>
-<h2 id="available-sources">Available Sources</h2>
-<p>As of version 1.0.5, these are the available fansubs:</p>
-<ul>
-<li>SubsPlease</li>
-<li>EraiRaws</li>
-<li>HorribleSubs</li>
-<li>Judas</li>
-</ul>
-<h2 id="config">Config</h2>
-<p>The following settings can be modified on the configuration menu:</p>
-<ul>
-<li>WebUI: custom port and credentials can be used (must previously configure manually on the qBittorrentApp)</li>
-<li>The path to the qBittorent executable must be given in case it is not the standard one.</li>
-<li>The download path can be set to any available disk.</li>
-</ul>
-<h2 id="colaborate">Colaborate</h2>
-<p>If you feel like it, contact me through GitHub or open an Issue there and colaborate with the project!</p>
+## About AniTorrent
+---
+This app has been developed by **kajiya_aru** with the sole purpose of replacing the poor search and indexing system of Nyaa.si, and there is no profit-seeking behind it. All of the material available on AniTorrent is externally hosted and I do not own nor make any profit off it.  
+Updates will keep coming, but any kind of help/sponsor will be appreciated as mantaining the app takes time and effort. If you like AniTorrent, don't hesitate to help me or give me a **star** on my GitHub page.
+
+
+## Usage
+---
+Using AniTorrent is really straight and easy:
+* On the main page, select the sources you want to search on (more on this on **AVAILABLE SOURCES**) and enter the name.
+* Once selected the show and source, a new page will pop up containing all the available episodes and/or specials with extra info. You can filter by quality of the shows.
+* After selecting the episodes to download, press the _Download_ button and the torrents will be automatically managed and renamed by the app.
+* If you wish to mantain the torrent active after the download, select **_Cancel Postprocessing_** on the Configuration.
+
+## Schedules
+---
+Schedules for airing anime are provided.
+* On the Airing Today window, shows and airing time are provided.
+* On the weekly schedule, shows are ordered based on their MyAnimeList rating.  
+
+Clicking on any show will autocomplete the Search Bar.
+## Available Sources
+---
+As of version 1.0.5, these are the available fansubs:
+
+* SubsPlease
+* EraiRaws
+* HorribleSubs
+* Judas
+
+## Config
+---
+The following settings can be modified on the configuration menu:
+* WebUI: custom port and credentials can be used (must previously configure manually on the qBittorrentApp)
+* The path to the qBittorent executable must be given in case it is not the standard one.
+* The download path can be set to any available disk.
+
+## Colaborate
+---
+If you feel like it, contact me through GitHub or open an Issue there and colaborate with the project!
