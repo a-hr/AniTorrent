@@ -94,7 +94,7 @@ class SubsPlease:
                     ep = float(ep)
 
             return Episode(
-                title=f"{parent} - {ep}",
+                title=f"{parent} - {str(ep).zfill(2)}",
                 suffix=clean_text[-4:],
                 series_name=parent,
                 quality=quality,

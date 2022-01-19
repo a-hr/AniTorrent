@@ -48,7 +48,7 @@ class PluginEngine:
 
         response = [[] for _ in range(7)]
         for anime in r:
-            if anime["type"] == "TV" and anime["score"]:
+            if anime["score"]: # and anime["type"] == "TV" 
                 response[(a := AiringAnime(**anime)).airing_day].append(a)
 
         def rating(anime: AiringAnime) -> float:
