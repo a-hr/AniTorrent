@@ -1,0 +1,21 @@
+QWidget#PrimaryLayout {
+        background-color: #F0F0F0;
+}
+QWidget#Sidebar {
+    border-radius: 10px;
+}
+QWidget#RightBox {
+    border-radius: 10px;
+    background-color: #F0F0F0;
+}
+QLabel#Banner {
+    color: #1a73e8;
+    font-size: 36px;
+}
+QWidget#Sidebar {
+    background-color: #E0E0E0;
+}
+QPushButton#SidebarButton {
+    border: none;
+    font-size: 14px;
+}

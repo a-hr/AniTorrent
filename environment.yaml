@@ -1,0 +1,15 @@
+name: anitorrent
+channels:
+  - conda-forge
+dependencies:
+  - pyyaml
+  - pyqt
+  - aiohttp
+  - bs4
+  - requests
+  - qtawesome
+  - python=3.10
+  - ca-certificates
+  - certifi
+  - openssl
+prefix: ~/miniforge3/envs/anitorrent

@@ -1,0 +1,7 @@
+default_quality: 1080p
+download_path: /Users/varo/Downloads/series
+host: http://localhost:8080
+user: admin
+password: adminadmin
+qbittorrent_path: /Applications/qbittorrent.app
+theme: light

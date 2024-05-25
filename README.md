@@ -1,8 +1,8 @@
 # AniTorrent
 
-![](https://img.shields.io/badge/Python%20-3.6%2B-blue)
+![](https://img.shields.io/badge/Python%20-3.10%2B-blue)
 ![](https://img.shields.io/badge/Status-working-brightgreen)
-![](https://img.shields.io/badge/fansubs-2-yellowgreen)
+![](https://img.shields.io/badge/fansubs-1-yellowgreen)
 
 Browse and download anime at max speed effortlessly, without any ads and at the quality you wish. No need of programming knowledge: everything is managed through a desktop minimalist app. 
 
@@ -13,19 +13,15 @@ Browse and download anime at max speed effortlessly, without any ads and at the 
 - Ad-free.
 - Full-featured: search by show title, quality, batch and fansub group, and download multiple episodes at the same time.
 - Real time progress and ETA tracking on the app.
-- Keep your shows automatically ordered on folders.
+- Keep your shows automatically ordered in folders.
 - Get rid of complex names: automatic parsing and renaming of episodes.
-- Upload schedule for all of the fansubs, covering most of the airing shows.
-- More to come: fav list, themes, MAL account linking...
 
 ## Changelog
 
-- Updated search engine: now the user is able to search on multiple sources simultaneously.
-- Improved parser.
-- Added plugin system (easier to add new sources)
-- General bugfixes:
-  - Internal type checking improved.
-  - Improved error handling.
+- Completely rewritten app, allowing for more features and better performance.
+- Added support for multiple fansub groups.
+- Added support for extension of available sources.
+- New UI.
  
 ## Supported Systems
 
@@ -35,38 +31,25 @@ Browse and download anime at max speed effortlessly, without any ads and at the 
 
 ## Supported Sites
 
-- [Erai Raws](https://www.erai-raws.info/): subtitles in many languages (Eng, Sp, Ger, Ita, Pt...), includes older series than SubsPlease.
-- [SubsPlease](https://subsplease.org/): currently covers roughly all of the airing animes.
-- Judas: some airing shows and NSFW uncensored stuff.
-- HorribleSubs: not updating anymore, but still a big resource for old series. 
-- More to come (feel free to ask through pull requests)
+- [SubsPlease](https://subsplease.org/): currently covers roughly all of the airing shows.
+
+- *Coming soon*:
+  - [Erai Raws](https://www.erai-raws.info/): subtitles in many languages (Eng, Sp, Ger, Ita, Pt...), includes older series than SubsPlease.
+
 
 ## Installation
 
 1. Clone the repository or download the files and locate them wherever you like. 
 
-2. Open a command line on the intallation folder and install the dependencies on `req.txt`.
+2. Open a command line on the intallation folder and install the dependencies. In order to install the packages, create a new conda/mamba environment and clone `enviroment.yml`:
+
+```bash
+conda env create -n anitorrent -f environment.yml
 ```
-pip install -r req.txt
-```
-* **Windows users might simply execute the setup.bat file**
 
-3. Download and install the [qBittorrent desktop app](https://www.qbittorrent.org/download.php), and enable WebUI on your settings (custom user, pass and port might be set on AniTorrent settings aswell). Letting qBittorrent launch on startup is recommended.
+3. Download and install the [qBittorrent desktop app](https://www.qbittorrent.org/download.php), and enable WebUI through the qBittorrent settings tab. AniTorrent will launch qBittorrent automatically if not running.
 
-**Note**:  
-
-Aditionally, compiled binaries (`.exe`) can be downloaded for Windows through Releases:
-
-- Just download the `.zip` and extract it on your PC.
-- To launch the app, double click on `Anitorrent.exe`. It is recommended to create a shortcut on your desktop.
-
-### Dependencies
-
-This package is built upon:
-- qBittorrent-api
-- Requests
-- BeautifulSoup
-- Cloudscraper
+> Aditionally, compiled binaries (`.exe`) will be available soon.
 
 ## Usage
 
@@ -74,9 +57,7 @@ Just launch the app (`main.py`) and enjoy!
 
 ##  To-do
 
-- [ ] Support for episode streaming without downloading (`VLC`)
-- [x] 2 new fansubs: HorribleSubs (huge amount of old series) and Judas
-- [ ] Favorite list
-- [ ] MAL account linking
-- [ ] New themes
-- [ ] Add download history
+- [ ] Add binary releases for PC, Mac and Linux
+- [ ] Add more sources (request them through issues or pull requests)
+- [ ] Upload schedule of airing shows
+- [ ] Download history
