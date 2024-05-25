@@ -1,0 +1,1 @@
+from .Nyaa import Nyaa

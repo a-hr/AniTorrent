@@ -1,0 +1,7 @@
+# file containing the supported groups and the regex to match their episodes
+# first regex must match: series name, episode number, resolution
+# second regex must match full season batch: series name, resolution
+subsplease: ['^\[.+?\]\s*(?P<series>.+?)\s*-\s*(?P<episode>\d+)\s*\((?P<quality>\d+p)\)\s*\[.+\]\.mkv$', '\[.*?\]\s*(?P<series>.*?)\s*\((?P<episode_start>\d{2})-(?P<episode_end>\d{2})\)\s*\((?P<quality>.*?)\)\s*\[Batch\]']
+erai-raws: ['erai-raws', 'erai-raws']
+horriblesubs: ['horriblesubs', 'horriblesubs']
+judas: ['judas', 'judas']
