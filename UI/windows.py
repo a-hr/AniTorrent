@@ -27,24 +27,43 @@ Torrent = TypeVar("Torrent")
 class SettingsWindow(QWidget):
     def __init__(self, data):
         super().__init__()
-        self.settings_layout = QVBoxLayout(self)
+        self.layout = QVBoxLayout(self)
+        self.setLayout(self.layout)
+
+        self.settings_widget = QWidget(self)
+        self.settings_layout = QHBoxLayout(self.settings_widget)
+
+        self.floating_box = QWidget(self.settings_widget)
+        self.floating_box.setObjectName("FloatingBox")
+        self.floating_box_layout = QVBoxLayout(self.floating_box)
+
         self.form_layout = QFormLayout()
-        self.setLayout(self.settings_layout)
-        self.settings_layout.addLayout(self.form_layout)
+        self.floating_box_layout.addLayout(self.form_layout)
 
-        self.save_setts_button = QPushButton("Save", self)
+        self.save_setts_button = QPushButton("Save", self.floating_box)
         self.save_setts_button.setObjectName("SaveButton")
-        self.settings_layout.addWidget(self.save_setts_button)
+        self.floating_box_layout.addWidget(self.save_setts_button)
 
-        self.cancel_setts_button = QPushButton("Cancel", self)
+        self.cancel_setts_button = QPushButton("Cancel", self.floating_box)
         self.cancel_setts_button.setObjectName("CancelButton")
-        self.settings_layout.addWidget(self.cancel_setts_button)
+        self.floating_box_layout.addWidget(self.cancel_setts_button)
 
         for key, value in data.items():
             label = QLabel(key)
+            label.setStyleSheet("font-weight: bold;")
             line_edit = QLineEdit(str(value))
             line_edit.setObjectName(f"line_{key}")
             self.form_layout.addRow(label, line_edit)
+
+        self.settings_layout.insertSpacerItem(
+            0, QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        )
+        self.settings_layout.addWidget(self.floating_box)
+        self.settings_layout.addSpacerItem(
+            QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        )
+
+        self.layout.addWidget(self.settings_widget)
 
 
 class SearchWidget(QWidget):

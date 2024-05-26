@@ -10,6 +10,7 @@ from PyQt5.QtWidgets import (
     QStackedWidget,
     QVBoxLayout,
     QWidget,
+    QLineEdit,
 )
 from qtawesome import icon
 from .windows import SettingsWindow, SearchWidget, ResultsWidget, DownloadsWidget
@@ -74,6 +75,11 @@ class MainWindow(QMainWindow):
         self.settings_window = SettingsWindow(self.settings.config)
         self.window4_layout.addWidget(self.settings_window)
 
+        # Adjust line edits to be the same width
+        for key, _ in self.settings.config.items():
+            line_edit = self.settings_window.findChild(QLineEdit, f"line_{key}")
+            line_edit.setMinimumWidth(int(self.width() * 0.4))
+
         # ---------- END CREATE WINDOWS ----------
 
         # ---------- CREATE SIDEBAR AND BUTTONS ----------
@@ -136,5 +142,10 @@ class MainWindow(QMainWindow):
         icon_size = int(self.width() * 0.035)
         for i in range(4):
             getattr(self, f"button{i+1}").setIconSize(QSize(icon_size, icon_size))
+
+        # Adjust line edits to be the same width
+        for key, _ in self.settings.config.items():
+            line_edit = self.settings_window.findChild(QLineEdit, f"line_{key}")
+            line_edit.setMinimumWidth(int(self.width() * 0.4))
 
         super().resizeEvent(event)
