@@ -40,6 +40,8 @@ class MainWindow(QMainWindow):
         self.banner = QLabel("AniTorrent", self)
         self.banner.setObjectName("Banner")
         self.banner.setAlignment(Qt.AlignCenter)
+        self.banner.setMaximumHeight(int(self.height() * 0.1))
+        self.banner.setFont(QFont("Roboto", int(self.width() * 0.04)))
         self.top_layout.addWidget(self.banner)
 
         # ---------- CREATE WINDOWS ----------
@@ -61,6 +63,7 @@ class MainWindow(QMainWindow):
         # Add results window widgets
         self.results_widget = ResultsWidget()
         self.results_widget.right_box.setMaximumHeight(int(self.height() * 0.4))
+        self.results_widget.right_box.setMaximumWidth(int(self.width() * 0.3))
         self.window2_layout.addWidget(self.results_widget)
 
         # Add downloads window widgets
@@ -81,7 +84,7 @@ class MainWindow(QMainWindow):
         self.sidebar_layout = QVBoxLayout(self.sidebar)
 
         # Create buttons with FontAwesome icons
-        icon_size = 35
+        icon_size = int(self.width() * 0.035)
         icons = ("fa.search", "fa.list-alt", "fa.download", "fa.cog")
 
         for i, icon_name in enumerate(icons):
@@ -121,6 +124,17 @@ class MainWindow(QMainWindow):
         self.stacked_widget.setCurrentIndex(0)
 
     def resizeEvent(self, event):
+        # Resize sidebar
+        self.sidebar.setMaximumWidth(int(self.width() * 0.08))
+        self.sidebar.setMaximumHeight(int(self.height() * 0.45))
+
+        # Resize banner
+        self.banner.setMaximumHeight(int(self.height() * 0.1))
+        self.banner.setFont(QFont("Roboto", int(self.width() * 0.04)))
+
+        # Resize sidebar buttons
+        icon_size = int(self.width() * 0.035)
+        for i in range(4):
+            getattr(self, f"button{i+1}").setIconSize(QSize(icon_size, icon_size))
+
         super().resizeEvent(event)
-        self.sidebar.setMaximumWidth(int(self.width() * 0.1))
-        self.sidebar.setMaximumHeight(int(self.width() * 0.4))

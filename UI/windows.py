@@ -93,6 +93,7 @@ class ResultsWidget(QWidget):
         self.label = QLabel("Options", self.right_box)
         self.combo_box = QComboBox(self.right_box)
         self.combo_box.addItems(["Select", "1080p", "720p", "480p"])
+        self.combo_box.view().setMinimumWidth(self.combo_box.minimumSizeHint().width())
 
         self.checkBox_batch = QCheckBox("Batch", self.right_box)
 
